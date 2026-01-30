@@ -20,29 +20,23 @@ interface ResourceCategory {
 
 const categories: ResourceCategory[] = [
   {
-    title: "Murex Practice Stack",
+    title: "Murex Practice Stack (Open)",
     icon: "fa-building-columns",
     color: "amber",
-    description: "Replicate Murex MX.3 front-to-back architecture using zero-cost enterprise tools. Focus on data flows, risk logic, and batch management.",
+    description: "Replicate Murex MX.3 front-to-back architecture using zero-cost enterprise tools. Focus on IR/FX lifecycle, Risk logic, and Unix/SQL mastery.",
     resources: [
-      { name: "OpenGamma (Trade Lifecycle)", url: "https://opengamma.com", type: "Practice", isOfficial: true, murexArea: "Booking" },
-      { name: "QuantLib (Pricing Engine)", url: "https://www.quantlib.org/", type: "Practice", isOfficial: true, murexArea: "Pricing" },
-      { name: "PostgreSQL (Trade Repository)", url: "https://www.postgresql.org/", type: "Sandbox", murexArea: "Database" },
-      { name: "MySQL (Static Data)", url: "https://www.mysql.com/", type: "Sandbox", murexArea: "Static" },
-      { name: "Ubuntu (Unix & Batch Context)", url: "https://ubuntu.com/", type: "Sandbox", isOfficial: true, murexArea: "Unix/OS" },
-      { name: "TimescaleDB (PnL Storage)", url: "https://www.timescale.com/", type: "Practice", murexArea: "Reporting" },
-      { name: "FRED Data (Yield Curves)", url: "https://fred.stlouisfed.org/", type: "Sandbox", murexArea: "Mkt Data" },
-      { name: "Alpha Vantage (FX Feed)", url: "https://www.alphavantage.co/", type: "Sandbox", murexArea: "Mkt Data" },
-      { name: "Yahoo Finance (Equity Quotes)", url: "https://pypi.org/project/yfinance/", type: "Practice", murexArea: "Mkt Data" },
-      { name: "QuantLib + Python (VaR & Risk)", url: "https://www.quantlib.org/", type: "Learn", murexArea: "Risk" },
-      { name: "Shell/Bash (Batch Workflow)", url: "https://www.gnu.org/software/bash/", type: "Learn", murexArea: "Batch" },
-      { name: "Cron (EOD Job Scheduler)", url: "https://crontab.guru/", type: "Sandbox", murexArea: "EOD" },
-      { name: "Pandas (Risk Sensitivity)", url: "https://pandas.pydata.org/", type: "Practice", murexArea: "Reporting" },
-      { name: "Jupyter (Pricing Notebooks)", url: "https://jupyter.org/", type: "Sandbox", murexArea: "Front-Off" },
-      { name: "grep/awk/sed (Log Analysis)", url: "https://www.gnu.org/software/grep/", type: "Learn", murexArea: "Support" },
-      { name: "Kafka (Real-time Integration)", url: "https://kafka.apache.org/", type: "Practice", murexArea: "GOM" },
-      { name: "NumPy (Model Calibration)", url: "https://numpy.org/", type: "Learn", murexArea: "Models" },
-      { name: "CSV/XML (Integration Feeds)", url: "https://en.wikipedia.org/wiki/XML", type: "Docs", murexArea: "Interface" }
+      { name: "OpenGamma (Risk & Analytics)", url: "https://opengamma.com", type: "Practice", isOfficial: true, murexArea: "MO Risk" },
+      { name: "QuantLib (Pricing & Curves)", url: "https://www.quantlib.org/", type: "Practice", isOfficial: true, murexArea: "FO Pricing" },
+      { name: "SQLite3 (Trade Repository)", url: "https://www.sqlite.org/", type: "Sandbox", murexArea: "SQL/Database" },
+      { name: "Ubuntu (Unix & Batch Context)", url: "https://ubuntu.com/", type: "Sandbox", isOfficial: true, murexArea: "Unix Shell" },
+      { name: "FRED Data (Yield Curves)", url: "https://fred.stlouisfed.org/", type: "Sandbox", murexArea: "Market Data" },
+      { name: "Yahoo Finance (FX/IR Feed)", url: "https://finance.yahoo.com/", type: "Sandbox", murexArea: "Market Data" },
+      { name: "Apache Airflow (Batch Orchestration)", url: "https://airflow.apache.org/", type: "Practice", murexArea: "EOD Batch" },
+      { name: "NumPy/SciPy (VaR & Greeks)", url: "https://numpy.org/", type: "Learn", murexArea: "Risk Engine" },
+      { name: "Pandas (PnL Reporting)", url: "https://pandas.pydata.org/", type: "Practice", murexArea: "Middle Office" },
+      { name: "SWIFT Standards (Settlement)", url: "https://www.swift.com/", type: "Docs", murexArea: "Back Office" },
+      { name: "grep/awk/sed (Log Analysis)", url: "https://www.gnu.org/software/grep/", type: "Learn", murexArea: "MX Support" },
+      { name: "Jupyter (Pricing Notebooks)", url: "https://jupyter.org/", type: "Sandbox", murexArea: "Quant Lab" }
     ]
   },
   {
@@ -151,19 +145,18 @@ const FreeResources: React.FC = () => {
         ))}
       </div>
 
-      <div className="bg-skyline-gradient rounded-[3rem] p-10 text-white flex flex-col md:flex-row items-center gap-8 border border-white/10 relative overflow-hidden">
+      <div className="bg-skyline-gradient rounded-[3rem] p-10 text-white flex flex-col md:flex-row items-center gap-8 border border-white/10 relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[100px] pointer-events-none"></div>
         <div className="flex-1 relative z-10">
-          <h3 className="text-2xl font-black mb-3">Enterprise Concept Replication</h3>
+          <h3 className="text-2xl font-black mb-3">Master Murex (MX.3) Concepts</h3>
           <p className="text-slate-400 leading-relaxed max-w-2xl font-medium">
-            90% of Murex support work is <strong>Unix, SQL, and Batch management</strong>. Master the trade lifecycle logic by building your own simulator with PostgreSQL and QuantLib. 
-            Real industry value lies in architecting the flow, not just clicking MX screens.
+            Murex consultants are trained on front-to-back architecture. Master the logic of Trade Lifecycle, Market Data Ingestion, Risk Sensitivity (DV01), and Batch Orchestration using our open stack simulation.
             <br/><br/>
-            Key Practice Areas: Trade Booking, Yield Curve Building, Risk Sensitivities (DV01), and EOD Revaluations.
+            Real industry value lies in the data flow, not just the vendor screens.
           </p>
         </div>
-        <Link to="/explore" className="bg-blue-600 text-white hover:bg-blue-700 font-black py-4 px-10 rounded-2xl shadow-xl transition-all relative z-10 whitespace-nowrap">
-          Launch Architect
+        <Link to="/labs" className="bg-blue-600 text-white hover:bg-blue-700 font-black py-4 px-10 rounded-2xl shadow-xl transition-all relative z-10 whitespace-nowrap">
+          Launch Sandbox
         </Link>
       </div>
     </div>
