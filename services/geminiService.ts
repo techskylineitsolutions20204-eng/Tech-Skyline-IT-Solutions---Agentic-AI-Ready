@@ -1,11 +1,10 @@
 
-import { GoogleGenAI, Type, GenerateContentResponse, Chat } from "@google/genai";
+import { GoogleGenAI, Type, GenerateContentResponse, Chat, Modality } from "@google/genai";
 import { TechDomain, LearningRoadmap } from "../types";
 
-const API_KEY = process.env.API_KEY || '';
-
+// Always initialize GoogleGenAI with process.env.API_KEY directly
 export const getGeminiClient = () => {
-  return new GoogleGenAI({ apiKey: API_KEY });
+  return new GoogleGenAI({ apiKey: process.env.API_KEY });
 };
 
 export const generateRoadmap = async (domain: TechDomain, role: string): Promise<LearningRoadmap> => {
@@ -82,6 +81,7 @@ export const generateRoadmap = async (domain: TechDomain, role: string): Promise
     }
   });
 
+  // response.text is a property
   return JSON.parse(response.text || '{}') as LearningRoadmap;
 };
 
@@ -113,6 +113,7 @@ export const generateQuiz = async (labTitle: string, currentTask: string): Promi
     }
   });
 
+  // response.text is a property
   return JSON.parse(response.text || '{"question": "What is the primary goal of this module?", "context": "Lab module check"}');
 };
 
@@ -145,6 +146,7 @@ export const evaluateQuiz = async (question: string, answer: string): Promise<{ 
     }
   });
 
+  // response.text is a property
   return JSON.parse(response.text || '{"score": 0, "feedback": "Evaluation failed. Please try again."}');
 };
 
@@ -164,7 +166,7 @@ export const generateSpeech = async (text: string): Promise<string> => {
     model: "gemini-2.5-flash-preview-tts",
     contents: [{ parts: [{ text }] }],
     config: {
-      responseModalities: ["AUDIO"],
+      responseModalities: [Modality.AUDIO],
       speechConfig: {
         voiceConfig: {
           prebuiltVoiceConfig: { voiceName: 'Kore' },

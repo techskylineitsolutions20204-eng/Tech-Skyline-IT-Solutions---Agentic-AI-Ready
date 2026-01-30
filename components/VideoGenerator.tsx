@@ -21,7 +21,8 @@ const VideoGenerator: React.FC = () => {
     setVideoUrl(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+      // Create a fresh instance right before making an API call to ensure it uses the latest key
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       let operation = await ai.models.generateVideos({
         model: 'veo-3.1-fast-generate-preview',
         prompt: `High quality cinematic visualization of: ${prompt}. Professional corporate tech aesthetic, 4k.`,
@@ -41,6 +42,7 @@ const VideoGenerator: React.FC = () => {
 
       const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
       if (downloadLink) {
+        // Must append API key when fetching from the download link.
         const response = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
         const blob = await response.blob();
         setVideoUrl(URL.createObjectURL(blob));

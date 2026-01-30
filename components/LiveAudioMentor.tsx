@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Modality } from '@google/genai';
 import { createAudioBlob, decode, decodeAudioData } from '../services/liveApiService';
 
 const LiveAudioMentor: React.FC = () => {
@@ -48,8 +48,8 @@ const LiveAudioMentor: React.FC = () => {
     setStatus('Initializing AI...');
 
     try {
-      // Create a fresh instance for the latest API key
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+      // Create a fresh instance for the latest API key, strictly from process.env.API_KEY
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       
       const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
@@ -72,8 +72,9 @@ const LiveAudioMentor: React.FC = () => {
             scriptProcessor.onaudioprocess = (e) => {
               const inputData = e.inputBuffer.getChannelData(0);
               const pcmBlob = createAudioBlob(inputData);
+              // CRITICAL: Solely rely on sessionPromise resolves
               sessionPromise.then((session) => {
-                if (session) session.sendRealtimeInput({ media: pcmBlob });
+                session.sendRealtimeInput({ media: pcmBlob });
               }).catch(err => {
                 console.error('Failed to send audio input', err);
               });
@@ -131,7 +132,7 @@ const LiveAudioMentor: React.FC = () => {
           }
         },
         config: {
-          responseModalities: ['AUDIO'],
+          responseModalities: [Modality.AUDIO],
           speechConfig: {
             voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } }
           },
