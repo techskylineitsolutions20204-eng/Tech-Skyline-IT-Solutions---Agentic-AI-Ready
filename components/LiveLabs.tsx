@@ -13,7 +13,7 @@ interface Lab {
 
 interface Trade {
   id: string;
-  product: 'FX_SPOT' | 'FX_FORWARD' | 'IRS' | 'OIS' | 'CDS';
+  product: 'FX_SPOT' | 'FX_FORWARD' | 'FX_SWAP' | 'IRS' | 'OIS' | 'CDS';
   buyCcy: string;
   sellCcy: string;
   notional: number;
@@ -26,21 +26,22 @@ interface Trade {
   timestamp: string;
   counterparty: string;
   book: string;
+  tenor: string;
 }
 
 const labs: Lab[] = [
   { 
     title: 'Murex Technical Environment (MX.3)', 
-    env: 'Unix + SQLite3 + QuantLib + Python', 
+    env: 'Unix + SQL + Python + QuantLib', 
     duration: '240 mins', 
     diff: 'Advanced',
     img: 'https://images.unsplash.com/photo-1611974714851-eb6051612342?auto=format&fit=crop&q=80&w=800',
     tasks: [
-      'FO: Capture IRS/FX trades in JSON/Excel schema', 
-      'MO: Revaluate Portfolio using QuantLib curves', 
-      'Risk: Compute DV01, Gamma, and Monte Carlo VaR',
-      'BO: SQL reconciliation of T+1 cashflows',
-      'Unix: Execute daily_eod.sh via simulated cron'
+      'FO: Capture IRS/FX trades in Excel Blotter schema', 
+      'MO: Revaluate Portfolio using Yield Curves', 
+      'Risk: Calculate DV01 and Monte Carlo VaR',
+      'BO: SQL Cashflow Reconciliation (T+1)',
+      'Unix: Scripting daily_eod.sh with cron'
     ]
   },
   { 
@@ -70,12 +71,17 @@ const LiveLabs: React.FC = () => {
   const [terminalLines, setTerminalLines] = useState<string[]>([]);
   const [completedTasks, setCompletedTasks] = useState<number[]>([]);
 
-  // Murex Sim State
+  // Murex Simulator State
   const [trades, setTrades] = useState<Trade[]>([]);
-  const [marketRates, setMarketRates] = useState<Record<string, number>>({ USDINR: 83.45, EURUSD: 1.085, MIBOR: 0.065, SOFR: 0.052 });
+  const [marketRates, setMarketRates] = useState<Record<string, number>>({ 
+    USDINR_SPOT: 83.45, 
+    EURUSD_SPOT: 1.085, 
+    SOFR_6M: 0.0525, 
+    MIBOR_3M: 0.065,
+    CDS_SPREAD: 0.012 
+  });
   const [batchStatus, setBatchStatus] = useState<'IDLE' | 'PRICING' | 'RISK' | 'SETTLEMENT' | 'COMPLETE'>('IDLE');
   const [batchLogs, setBatchLogs] = useState<string[]>([]);
-  const [systemLogs, setSystemLogs] = useState<string[]>([]);
 
   // Quiz State
   const [quizLoading, setQuizLoading] = useState(false);
@@ -89,17 +95,17 @@ const LiveLabs: React.FC = () => {
     setIsProvisioning(true);
     setProvisioningStep(0);
     setTerminalLines([
-      '# Skyline OS v4.2 (Agentic Edition)',
-      '# Initializing Murex VM Environment...',
-      '# Mounting trades/, market_data/, risk_engine/, reports/',
-      '# Access Level: ROOT_CONSULTANT_ACCESS_GRANTED',
-      '# skyline@murex-mx3:~$ '
+      '# Skyline OS Enterprise Edition',
+      '# Booting Murex VM Environment...',
+      '# Mounting /opt/murex/mx3_simulator',
+      '# Loading QuantLib pricing kernels...',
+      '# status: SUCCESS',
+      'skyline@murex-consultant:~$ '
     ]);
     setCompletedTasks([]);
     setTrades([]);
     setBatchLogs([]);
     setBatchStatus('IDLE');
-    setSystemLogs(['[SYSTEM] Kernel loaded.', '[MX3] Services started on port 9090.']);
     if (lab.title.includes('Murex')) setActiveTab('mx_console');
   };
 
@@ -119,75 +125,72 @@ const LiveLabs: React.FC = () => {
     }
   }, [isProvisioning]);
 
-  const bookTrade = (product: Trade['product'], asset: string, rate: number, notional: number) => {
-    const mktRate = product.startsWith('FX') ? marketRates.USDINR : marketRates.SOFR;
-    const npv = product.startsWith('FX') ? (mktRate - rate) * notional : (rate - mktRate) * (notional * 0.05);
-    const dv01 = notional * 0.0001;
+  const bookTrade = (product: Trade['product'], ccyPair: string, rate: number, notional: number, tenor: string) => {
+    const mktKey = product.startsWith('FX') ? `${ccyPair}_SPOT` : 'SOFR_6M';
+    const mktRate = marketRates[mktKey] || 0.05;
+    
+    // Simple MTM Reval
+    let npv = 0;
+    if (product === 'FX_SPOT') npv = (mktRate - rate) * notional;
+    else if (product === 'IRS') npv = (rate - mktRate) * (notional * 0.05); // Simulated IRS value
+    else npv = (mktRate - rate) * notional * 0.9;
 
     const newTrade: Trade = {
-      id: `MX_${Math.floor(1000 + Math.random() * 8999)}`,
+      id: `MX_${Math.floor(10000 + Math.random() * 89999)}`,
       product,
-      buyCcy: asset.substring(0, 3),
-      sellCcy: asset.substring(3, 6) || 'INR',
+      buyCcy: ccyPair.substring(0, 3),
+      sellCcy: ccyPair.substring(3, 6) || 'INR',
       notional,
       tradeRate: rate,
       marketRate: mktRate,
       status: 'NEW',
       npv,
-      dv01,
+      dv01: notional * 0.0001,
       delta: notional,
       timestamp: new Date().toLocaleTimeString(),
-      counterparty: 'JP_MORGAN_NY',
-      book: 'TRADING_HFT_01'
+      counterparty: 'GS_LDN_DESK',
+      book: 'HFT_GLOBAL_01',
+      tenor
     };
 
     setTrades(prev => [newTrade, ...prev]);
-    setSystemLogs(prev => [...prev, `[FO] Trade ${newTrade.id} captured successfully.`]);
+    setTerminalLines(p => [...p, `skyline@murex:~$ book ${product} ${ccyPair} ${rate} ${notional} ${tenor}`, `[FO] Trade ${newTrade.id} inserted into MX_TRADE_LEDGER (SQLite3).`]);
   };
 
-  const executeBatch = () => {
-    if (trades.length === 0) return alert('Book trades in Front Office first!');
+  const runBatch = () => {
+    if (trades.length === 0) return alert('Front Office: Book trades first!');
     setBatchStatus('PRICING');
-    setBatchLogs(['[BATCH] Triggering EOD cycle...', '[PRICING] Running reval on 24 curves...']);
+    setBatchLogs(['[BATCH] Loading Market Data Curves...', '[PRICING] Running Revaluation Engine...']);
     
     setTimeout(() => {
       setBatchStatus('RISK');
-      setBatchLogs(prev => [...prev, '[RISK] Computing portfolio VaR (Monte Carlo 10k)...', '[RISK] Calculating Greeks...']);
+      setBatchLogs(p => [...p, '[RISK] Calculating Greeks (DV01, Gamma)...', '[RISK] Running Monte Carlo VaR (99.9% CI)...']);
       setTimeout(() => {
         setBatchStatus('SETTLEMENT');
-        setBatchLogs(prev => [...prev, '[OPS] Generating SWIFT MT300 messages...', '[OPS] Reconciling cash accounts...']);
+        setBatchLogs(p => [...p, '[OPS] Generating MT300 Confirmation XML...', '[OPS] Reconciling cashflows against NOSTRO...']);
         setTimeout(() => {
           setBatchStatus('COMPLETE');
-          setBatchLogs(prev => [...prev, '[SYSTEM] Batch sequence successful.', '[SUCCESS] reports/daily_pnl.csv exported.']);
+          setBatchLogs(p => [...p, '[SUCCESS] Batch chain finished.', '[EOD] reports/daily_pnl.csv exported.']);
           setTrades(prev => prev.map(t => ({ ...t, status: 'SETTLED' })));
         }, 1500);
       }, 1500);
     }, 1500);
   };
 
-  const handleTerminalCommand = (cmd: string) => {
+  const handleTerminal = (cmd: string) => {
     const parts = cmd.toLowerCase().trim().split(' ');
     const action = parts[0];
-
     let output = '';
-    if (action === 'ls') {
-      output = 'trades/  market_data/  risk_engine/  batch/  reports/  daily_eod.sh';
-    } else if (action === 'grep' && parts[1] === 'irs') {
-      output = trades.filter(t => t.product === 'IRS').map(t => `${t.id},${t.product},${t.notional},${t.tradeRate}`).join('\n') || 'No IRS trades found.';
-    } else if (action === 'awk') {
-      output = '1,000,000\n5,000,000\n250,000';
-    } else if (action === 'sqlite3') {
-      output = 'SQLite version 3.40.1\nEnter ".help" for usage hints.\nsqlite> ';
-    } else if (action === 'python' && parts[1]?.includes('pricing')) {
-      output = '[QuantLib] Revaluation complete. Portfolio NPV: $' + trades.reduce((a, b) => a + b.npv, 0).toLocaleString();
-    } else if (action === 'clear') {
-      setTerminalLines(['skyline@murex-mx3:~$ ']);
-      return;
-    } else {
-      output = `sh: command not found: ${action}`;
-    }
 
-    setTerminalLines(p => [...p, `skyline@murex-mx3:~$ ${cmd}`, output]);
+    if (action === 'ls') output = 'trades.xlsx  market_data.csv  risk_engine/  batch/  daily_eod.sh';
+    else if (action === 'grep' && parts[1] === 'irs') output = trades.filter(t => t.product === 'IRS').map(t => `${t.id} IRS ${t.notional}`).join('\n') || 'No matches.';
+    else if (action === 'sqlite3') output = 'SQLite version 3.41.0\nsqlite> SELECT * FROM trades;';
+    else if (action === 'python' && parts[1]?.includes('pricing')) output = '[QuantLib] Revaluation Complete. Portofolio NPV: $' + trades.reduce((a, b) => a + b.npv, 0).toLocaleString();
+    else if (action === 'cat') output = 'CURVE,TENOR,RATE\nSOFR,1M,5.25\nSOFR,3M,5.30\nSOFR,6M,5.35';
+    else if (action === 'clear') { setTerminalLines(['skyline@murex-consultant:~$ ']); return; }
+    else output = `sh: command not found: ${action}`;
+
+    setTerminalLines(p => [...p, `skyline@murex-consultant:~$ ${cmd}`, output]);
   };
 
   const handleGenerateQuiz = async () => {
@@ -221,11 +224,11 @@ const LiveLabs: React.FC = () => {
 
   if (selectedLab && !isProvisioning) {
     return (
-      <div className="max-w-7xl mx-auto h-[calc(100vh-12rem)] flex flex-col animate-in fade-in duration-500 bg-slate-900 rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
+      <div className="max-w-7xl mx-auto h-[calc(100vh-12rem)] flex flex-col animate-in fade-in duration-500 bg-slate-950 rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
         {/* Lab Header */}
-        <div className="bg-slate-950 p-6 flex items-center justify-between border-b border-white/5">
+        <div className="bg-slate-900 p-6 flex items-center justify-between border-b border-white/5">
           <div className="flex items-center gap-4">
-            <button onClick={() => setSelectedLab(null)} className="text-white/30 hover:text-white">
+            <button onClick={() => setSelectedLab(null)} className="text-white/30 hover:text-white transition-colors">
               <i className="fas fa-power-off"></i>
             </button>
             <div>
@@ -233,32 +236,32 @@ const LiveLabs: React.FC = () => {
               <div className="flex items-center gap-3">
                 <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest flex items-center gap-1">
                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                  CONNECTED: ROOT_NODE_01
+                  CONSULTANT_ACCESS: LIVE
                 </span>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex -space-x-2">
-              <div className="w-6 h-6 rounded-full bg-blue-600 border border-slate-900 flex items-center justify-center text-[8px] text-white font-bold">FO</div>
-              <div className="w-6 h-6 rounded-full bg-emerald-600 border border-slate-900 flex items-center justify-center text-[8px] text-white font-bold">MO</div>
-              <div className="w-6 h-6 rounded-full bg-amber-600 border border-slate-900 flex items-center justify-center text-[8px] text-white font-bold">BO</div>
+            <div className="flex -space-x-1">
+              <span className="w-6 h-6 rounded-lg bg-blue-600 border border-slate-900 flex items-center justify-center text-[8px] text-white font-bold">FO</span>
+              <span className="w-6 h-6 rounded-lg bg-emerald-600 border border-slate-900 flex items-center justify-center text-[8px] text-white font-bold">MO</span>
+              <span className="w-6 h-6 rounded-lg bg-amber-600 border border-slate-900 flex items-center justify-center text-[8px] text-white font-bold">BO</span>
             </div>
           </div>
         </div>
 
         <div className="flex-1 flex overflow-hidden">
-          {/* Nav Sidebar */}
+          {/* Sidebar Nav */}
           <aside className="w-64 bg-slate-950 border-r border-white/5 p-6 flex flex-col gap-8">
             <div className="space-y-4">
               <h3 className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">Lifecycle Desks</h3>
               <nav className="space-y-1">
                 {[
-                  { id: 'mx_console', label: 'MX.3 Simulator', icon: 'fa-desktop' },
+                  { id: 'mx_console', label: 'MX.3 Environment', icon: 'fa-desktop' },
                   { id: 'terminal', label: 'Unix Console', icon: 'fa-terminal' },
                   { id: 'specs', label: 'Functional Specs', icon: 'fa-file-signature' },
-                  { id: 'docs', label: 'Murex Manual', icon: 'fa-book-open' },
-                  { id: 'tutor', label: 'Mentor Hub', icon: 'fa-headset' }
+                  { id: 'docs', label: 'Product Manual', icon: 'fa-book' },
+                  { id: 'tutor', label: 'L3 Certification', icon: 'fa-graduation-cap' }
                 ].map(item => (
                   <button 
                     key={item.id}
@@ -275,8 +278,8 @@ const LiveLabs: React.FC = () => {
             </div>
 
             <div className="mt-auto space-y-4">
-              <h3 className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">Task Backlog</h3>
-              <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
+              <h3 className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">Training Plan</h3>
+              <div className="space-y-2">
                 {selectedLab.tasks.map((task, idx) => (
                   <div 
                     key={idx}
@@ -292,8 +295,8 @@ const LiveLabs: React.FC = () => {
             </div>
           </aside>
 
-          {/* Main Content Area */}
-          <main className="flex-1 flex flex-col bg-slate-900/50 relative">
+          {/* Main Content */}
+          <main className="flex-1 flex flex-col bg-slate-900/40 relative">
             <div className="flex-1 p-8 overflow-y-auto custom-scrollbar">
               {activeTab === 'mx_console' && (
                 <div className="space-y-8 animate-in fade-in duration-500">
@@ -301,9 +304,9 @@ const LiveLabs: React.FC = () => {
                     <div className="flex gap-4">
                       {[
                         { id: 'fo', label: 'Front Office', icon: 'fa-money-bill-transfer' },
-                        { id: 'mo', label: 'Middle Office (Risk)', icon: 'fa-chart-line' },
-                        { id: 'bo', label: 'Back Office (Ops)', icon: 'fa-vault' },
-                        { id: 'batch', label: 'Batch/EOD', icon: 'fa-bolt' }
+                        { id: 'mo', label: 'Risk & Pricing', icon: 'fa-chart-area' },
+                        { id: 'bo', label: 'Back Office', icon: 'fa-receipt' },
+                        { id: 'batch', label: 'Batch Console', icon: 'fa-bolt' }
                       ].map(desk => (
                         <button
                           key={desk.id}
@@ -321,23 +324,24 @@ const LiveLabs: React.FC = () => {
 
                   {mxSubTab === 'fo' && (
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                      <div className="lg:col-span-8 space-y-6">
+                      <div className="lg:col-span-7 space-y-6">
                         <div className="bg-slate-950 border border-white/5 rounded-2xl p-8">
                           <h4 className="text-[10px] font-black text-white uppercase tracking-widest mb-6 flex items-center gap-2">
-                            <i className="fas fa-plus-circle text-blue-500"></i> New Trade Capture (JSON Mapping)
+                            <i className="fas fa-plus text-blue-500"></i> FO: Capture New Trade
                           </h4>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                          <div className="grid grid-cols-2 gap-6">
                             <div className="space-y-2">
                               <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Instrument</label>
                               <select className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-xs text-white outline-none">
-                                <option>IRS</option>
                                 <option>FX_SPOT</option>
                                 <option>FX_FORWARD</option>
+                                <option>IRS</option>
                                 <option>OIS</option>
+                                <option>CDS</option>
                               </select>
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Buy/Sell Pair</label>
+                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Asset/Pair</label>
                               <select className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-xs text-white outline-none">
                                 <option>USDINR</option>
                                 <option>EURUSD</option>
@@ -354,44 +358,47 @@ const LiveLabs: React.FC = () => {
                             </div>
                           </div>
                           <button 
-                            onClick={() => bookTrade('IRS', 'USDINR', 83.20, 1000000)}
+                            onClick={() => bookTrade('FX_SPOT', 'USDINR', 83.20, 1000000, '6M')}
                             className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl text-[10px] uppercase tracking-widest transition-all"
                           >
-                            Capture into trade_repo.sql
+                            Capture to MX_TRADES
                           </button>
                         </div>
 
                         <div className="bg-slate-950 border border-white/5 rounded-2xl overflow-hidden">
-                          <div className="px-6 py-4 bg-white/5 flex justify-between items-center">
-                            <h4 className="text-[10px] font-black text-white uppercase tracking-widest">Trade Ledger (Front Office)</h4>
+                          <div className="px-6 py-4 bg-white/5 border-b border-white/5">
+                            <h4 className="text-[10px] font-black text-white uppercase tracking-widest">Conceptual Trade Repository</h4>
                           </div>
-                          <table className="w-full text-left text-[10px] font-mono">
-                            <thead className="bg-white/5 text-slate-500">
-                              <tr>
-                                <th className="px-6 py-3 font-black uppercase">ID</th>
-                                <th className="px-6 py-3 font-black uppercase">Asset</th>
-                                <th className="px-6 py-3 font-black uppercase text-right">Notional</th>
-                                <th className="px-6 py-3 font-black uppercase">Status</th>
-                              </tr>
-                            </thead>
-                            <tbody className="text-slate-300">
-                              {trades.map(t => (
-                                <tr key={t.id} className="border-b border-white/5">
-                                  <td className="px-6 py-3 text-blue-400 font-bold">{t.id}</td>
-                                  <td className="px-6 py-3">{t.product} ({t.buyCcy}/{t.sellCcy})</td>
-                                  <td className="px-6 py-3 text-right">${t.notional.toLocaleString()}</td>
-                                  <td className="px-6 py-3">
-                                    <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[8px] font-black uppercase">{t.status}</span>
-                                  </td>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-left text-[10px] font-mono">
+                              <thead className="bg-white/5 text-slate-500">
+                                <tr>
+                                  <th className="px-6 py-3 font-black uppercase">MX_ID</th>
+                                  <th className="px-6 py-3 font-black uppercase">Product</th>
+                                  <th className="px-6 py-3 font-black uppercase">Notional</th>
+                                  <th className="px-6 py-3 font-black uppercase">Status</th>
                                 </tr>
-                              ))}
-                            </tbody>
-                          </table>
+                              </thead>
+                              <tbody className="text-slate-300">
+                                {trades.map(t => (
+                                  <tr key={t.id} className="border-b border-white/5">
+                                    <td className="px-6 py-3 text-blue-400 font-bold">{t.id}</td>
+                                    <td className="px-6 py-3">{t.product} ({t.buyCcy}/{t.sellCcy})</td>
+                                    <td className="px-6 py-3">${t.notional.toLocaleString()}</td>
+                                    <td className="px-6 py-3">
+                                      <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[8px] font-black uppercase">{t.status}</span>
+                                    </td>
+                                  </tr>
+                                ))}
+                                {trades.length === 0 && <tr><td colSpan={4} className="px-6 py-12 text-center text-slate-600 italic">No trades captured. FO Desk empty.</td></tr>}
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       </div>
-                      <div className="lg:col-span-4 space-y-6">
+                      <div className="lg:col-span-5 space-y-6">
                         <div className="bg-slate-950 border border-white/5 rounded-2xl p-6">
-                          <h4 className="text-[10px] font-black text-white uppercase tracking-widest mb-4">Market Data Curves</h4>
+                          <h4 className="text-[10px] font-black text-white uppercase tracking-widest mb-4">Live Curves & Market Feed</h4>
                           <div className="space-y-3">
                             {Object.entries(marketRates).map(([k, v]) => (
                               <div key={k} className="flex justify-between items-center p-3 rounded-xl bg-white/5 border border-white/5">
@@ -402,15 +409,9 @@ const LiveLabs: React.FC = () => {
                           </div>
                         </div>
                         <div className="bg-slate-950 border border-white/5 rounded-2xl p-6">
-                          <h4 className="text-[10px] font-black text-white uppercase tracking-widest mb-4">Pricing Skeleton (QuantLib)</h4>
-                          <pre className="text-[9px] font-mono text-slate-500 overflow-x-auto whitespace-pre-wrap">
-                            {`import QuantLib as ql
-# Constructing Discount Curve
-curve = ql.FlatForward(0, ql.TARGET(), 0.05, ql.Actual365Fixed())
-handle = ql.RelinkableYieldTermStructureHandle(curve)
-# Pricing IRS001...
-engine = ql.DiscountingSwapEngine(handle)
-swap.setPricingEngine(engine)`}
+                          <h4 className="text-[10px] font-black text-white uppercase tracking-widest mb-2">QuantLib Snippet</h4>
+                          <pre className="text-[9px] font-mono text-slate-500 overflow-x-auto whitespace-pre">
+                            {`import QuantLib as ql\n# Bootstrapping SOFR Curve\ncurve = ql.FlatForward(0, ql.TARGET(), \n           0.0525, ql.Actual365Fixed())\nhandle = ql.YieldTermStructureHandle(curve)\n# Pricing IRS001\nengine = ql.DiscountingSwapEngine(handle)`}
                           </pre>
                         </div>
                       </div>
@@ -419,53 +420,55 @@ swap.setPricingEngine(engine)`}
 
                   {mxSubTab === 'mo' && (
                     <div className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div className="bg-slate-950 p-6 rounded-2xl border border-white/5">
-                          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Portfolio NPV</p>
-                          <h4 className={`text-xl font-bold font-mono ${trades.reduce((a, b) => a + b.npv, 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Total NPV</p>
+                          <h4 className={`text-2xl font-bold font-mono ${trades.reduce((a, b) => a + b.npv, 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                             ${(trades.reduce((a, b) => a + b.npv, 0) / 1000).toFixed(1)}K
                           </h4>
                         </div>
                         <div className="bg-slate-950 p-6 rounded-2xl border border-white/5">
-                          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Total DV01</p>
-                          <h4 className="text-xl font-bold font-mono text-white">
-                            ${(trades.reduce((a, b) => a + b.dv01, 0) / 1).toFixed(2)}
+                          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Portfolio DV01</p>
+                          <h4 className="text-2xl font-bold font-mono text-white">
+                            ${(trades.reduce((a, b) => a + b.dv01, 0)).toFixed(2)}
                           </h4>
                         </div>
                         <div className="bg-slate-950 p-6 rounded-2xl border border-white/5">
-                          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">99% VaR (1D)</p>
-                          <h4 className="text-xl font-bold font-mono text-rose-400">
-                            -${(trades.length * 450).toLocaleString()}
+                          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">VaR (99.9% MC)</p>
+                          <h4 className="text-2xl font-bold font-mono text-rose-400">
+                            -${(trades.length * 850).toLocaleString()}
                           </h4>
                         </div>
                         <div className="bg-slate-950 p-6 rounded-2xl border border-white/5">
-                          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Risk Engine</p>
-                          <span className="text-[9px] font-black uppercase text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded">ACTIVE</span>
+                          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Greeks Engine</p>
+                          <span className="text-[9px] font-black text-emerald-400 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> ACTIVE
+                          </span>
                         </div>
                       </div>
 
                       <div className="bg-slate-950 border border-white/5 rounded-2xl overflow-hidden">
-                        <div className="px-6 py-4 bg-white/5">
-                          <h4 className="text-[10px] font-black text-white uppercase tracking-widest">Risk Sensitivities (Greeks)</h4>
+                        <div className="px-6 py-4 bg-white/5 border-b border-white/5">
+                          <h4 className="text-[10px] font-black text-white uppercase tracking-widest">Risk Reports (MO Analytics)</h4>
                         </div>
                         <table className="w-full text-left text-[10px] font-mono">
                           <thead className="bg-white/5 text-slate-500">
                             <tr>
-                              <th className="px-6 py-3 font-black uppercase">Trade ID</th>
+                              <th className="px-6 py-3 font-black uppercase">MX_ID</th>
                               <th className="px-6 py-3 font-black uppercase text-right">NPV</th>
                               <th className="px-6 py-3 font-black uppercase text-right">DV01</th>
-                              <th className="px-6 py-3 font-black uppercase text-right">Delta</th>
                               <th className="px-6 py-3 font-black uppercase text-right">Gamma</th>
+                              <th className="px-6 py-3 font-black uppercase">Book</th>
                             </tr>
                           </thead>
                           <tbody className="text-slate-300">
                             {trades.map(t => (
                               <tr key={t.id} className="border-b border-white/5">
                                 <td className="px-6 py-3 text-blue-400 font-bold">{t.id}</td>
-                                <td className={`px-6 py-3 text-right ${t.npv >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>${t.npv.toLocaleString()}</td>
-                                <td className="px-6 py-3 text-right text-white">${t.dv01.toLocaleString()}</td>
-                                <td className="px-6 py-3 text-right">{t.delta.toLocaleString()}</td>
-                                <td className="px-6 py-3 text-right">0.024</td>
+                                <td className={`px-6 py-3 text-right font-bold ${t.npv >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>${t.npv.toLocaleString()}</td>
+                                <td className="px-6 py-3 text-right">${t.dv01.toLocaleString()}</td>
+                                <td className="px-6 py-3 text-right">0.021</td>
+                                <td className="px-6 py-3 text-slate-500">{t.book}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -477,24 +480,24 @@ swap.setPricingEngine(engine)`}
                   {mxSubTab === 'bo' && (
                     <div className="space-y-6">
                       <div className="bg-slate-950 border border-white/5 rounded-2xl p-8">
-                        <h4 className="text-[10px] font-black text-white uppercase tracking-widest mb-6">Operations & Settlement (SQLite)</h4>
+                        <h4 className="text-[10px] font-black text-white uppercase tracking-widest mb-6 flex items-center gap-2">
+                          <i className="fas fa-file-invoice-dollar text-amber-500"></i> BO: Settlements & GL Posts
+                        </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                           <div className="space-y-4">
-                            <p className="text-xs text-slate-400 leading-relaxed font-medium">Reconcile trade repository against settlement cache:</p>
-                            <pre className="bg-slate-900 p-4 rounded-xl text-[10px] font-mono text-emerald-400">
-                              {`SELECT trade_id, status, notional 
-FROM mx_trades 
-WHERE status = 'PRICED';`}
+                            <p className="text-xs text-slate-400 leading-relaxed font-medium">Generate SWIFT MT300 Confirmation:</p>
+                            <pre className="bg-slate-900 p-4 rounded-xl text-[10px] font-mono text-slate-500 border border-white/5">
+                              {`:20:MX-SIM-882\n:22A:NEWT\n:82A:TECH_SKYLINE\n:87A:JP_MORGAN_LDN\n:30T:20260215\n:30V:20260217`}
                             </pre>
-                            <button className="bg-white/5 hover:bg-white/10 text-white font-black py-2 px-4 rounded-lg text-[9px] uppercase tracking-widest border border-white/10 transition-all">
-                              Run Query
-                            </button>
                           </div>
                           <div className="space-y-4">
-                            <p className="text-xs text-slate-400 leading-relaxed font-medium">Generate SWIFT MT300 Confirmation:</p>
-                            <div className="bg-slate-900 p-4 rounded-xl text-[10px] font-mono text-slate-500 border border-white/5">
-                              {`:20:MX-CONF-001\n:22A:NEWT\n:82A:TECHSKYLINE\n:87A:JPMORGAN\n:30T:20260130`}
-                            </div>
+                            <p className="text-xs text-slate-400 leading-relaxed font-medium">Reconcile T+1 Break Management (SQL):</p>
+                            <pre className="bg-slate-900 p-4 rounded-xl text-[10px] font-mono text-emerald-400 border border-white/5">
+                              {`SELECT trade_id, amt_diff \nFROM recon_breaks \nWHERE status = 'OPEN';`}
+                            </pre>
+                            <button className="bg-white/5 hover:bg-white/10 text-white font-black py-2 px-6 rounded-lg text-[9px] uppercase tracking-widest border border-white/10 transition-all">
+                              Run Recon Query
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -503,21 +506,21 @@ WHERE status = 'PRICED';`}
 
                   {mxSubTab === 'batch' && (
                     <div className="space-y-6">
-                      <div className="bg-slate-950 border border-white/5 rounded-[2rem] p-12 text-center space-y-8">
+                      <div className="bg-slate-950 border border-white/5 rounded-[2.5rem] p-12 text-center space-y-10">
                         <div className="max-w-md mx-auto space-y-2">
-                          <h3 className="text-xl font-black text-white uppercase tracking-tight">EOD Batch Orchestrator</h3>
-                          <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Execute daily_eod.sh sequence</p>
+                          <h3 className="text-2xl font-black text-white uppercase tracking-tight">EOD Processing Console</h3>
+                          <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]">Master Batch Orchestration</p>
                         </div>
 
-                        <div className="flex justify-center items-center gap-12 py-4">
+                        <div className="flex justify-center items-center gap-12">
                           {[
-                            { id: 'PRICING', label: 'Reval', icon: 'fa-calculator' },
+                            { id: 'PRICING', label: 'Reval', icon: 'fa-tags' },
                             { id: 'RISK', label: 'Greeks', icon: 'fa-chart-pie' },
-                            { id: 'SETTLEMENT', label: 'Settlement', icon: 'fa-envelope-open-text' }
+                            { id: 'SETTLEMENT', label: 'Cashflows', icon: 'fa-money-bill-transfer' }
                           ].map(step => (
                             <div key={step.id} className="flex flex-col items-center gap-4 relative">
-                              <div className={`w-16 h-16 rounded-3xl flex items-center justify-center text-xl transition-all duration-700 ${
-                                batchStatus === step.id ? 'bg-blue-600 text-white scale-110 shadow-xl shadow-blue-500/20' : 
+                              <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center text-xl transition-all duration-700 ${
+                                batchStatus === step.id ? 'bg-blue-600 text-white scale-110 shadow-xl shadow-blue-500/30' : 
                                 batchStatus === 'COMPLETE' || (step.id === 'PRICING' && (batchStatus === 'RISK' || batchStatus === 'SETTLEMENT')) || (step.id === 'RISK' && batchStatus === 'SETTLEMENT')
                                 ? 'bg-emerald-500 text-white' : 'bg-white/5 text-slate-600 border border-white/5'
                               }`}>
@@ -529,17 +532,17 @@ WHERE status = 'PRICED';`}
                         </div>
 
                         <button 
-                          onClick={executeBatch}
+                          onClick={runBatch}
                           disabled={batchStatus !== 'IDLE' && batchStatus !== 'COMPLETE'}
-                          className="px-16 py-5 bg-white text-slate-900 font-black rounded-2xl text-[10px] uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all shadow-xl shadow-white/10"
+                          className="px-16 py-5 bg-white text-slate-900 font-black rounded-2xl text-[10px] uppercase tracking-[0.2em] hover:bg-blue-600 hover:text-white transition-all shadow-2xl"
                         >
-                          {batchStatus === 'IDLE' ? 'Execute Batch Chain' : 'Restart Batch Cycle'}
+                          {batchStatus === 'IDLE' ? 'Execute Daily EOD' : 'Rerun Batch Sequence'}
                         </button>
                       </div>
 
                       <div className="bg-slate-950 border border-white/5 rounded-2xl p-8 font-mono text-[10px] text-slate-500 space-y-1 h-48 overflow-y-auto custom-scrollbar">
                         {batchLogs.map((log, i) => (
-                          <div key={i} className={log.includes('SUCCESS') || log.includes('Successful') ? 'text-emerald-400' : ''}>
+                          <div key={i} className={log.includes('SUCCESS') || log.includes('finished') ? 'text-emerald-400' : ''}>
                             {log}
                           </div>
                         ))}
@@ -558,7 +561,7 @@ WHERE status = 'PRICED';`}
                       </div>
                     ))}
                     <div className="flex gap-2 items-center">
-                      <span className="text-white font-bold whitespace-nowrap">skyline@murex-mx3:~$</span>
+                      <span className="text-white font-bold whitespace-nowrap">skyline@murex-consultant:~$</span>
                       <input 
                         autoFocus
                         type="text"
@@ -567,7 +570,7 @@ WHERE status = 'PRICED';`}
                           if (e.key === 'Enter') {
                             const val = (e.target as HTMLInputElement).value;
                             (e.target as HTMLInputElement).value = '';
-                            handleTerminalCommand(val);
+                            handleTerminal(val);
                           }
                         }}
                       />
@@ -576,8 +579,8 @@ WHERE status = 'PRICED';`}
                   <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
                     <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4">Unix Utility Palette</p>
                     <div className="flex flex-wrap gap-2">
-                      {['ls', 'grep irs', 'awk', 'sqlite3', 'python pricing.py', 'clear'].map(c => (
-                        <button key={c} onClick={() => handleTerminalCommand(c)} className="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white px-3 py-1.5 rounded-lg border border-white/5 transition-all text-[9px] font-black uppercase tracking-tighter">
+                      {['ls', 'grep irs', 'sqlite3', 'python pricing.py', 'cat market_data.csv', 'clear'].map(c => (
+                        <button key={c} onClick={() => handleTerminal(c)} className="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white px-3 py-1.5 rounded-lg border border-white/5 transition-all text-[9px] font-black uppercase tracking-tighter">
                           {c}
                         </button>
                       ))}
@@ -588,50 +591,28 @@ WHERE status = 'PRICED';`}
 
               {activeTab === 'specs' && (
                 <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in duration-500">
-                  <h3 className="text-white font-black text-3xl mb-8 tracking-tighter uppercase">Functional Specifications (L2/L3 Training)</h3>
+                  <h3 className="text-white font-black text-3xl mb-8 tracking-tighter uppercase">Functional Specifications (L2 Training)</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <section className="bg-slate-950 p-8 rounded-[2rem] border border-blue-500/20 shadow-xl">
-                      <h4 className="text-blue-400 font-black uppercase text-xs tracking-widest mb-6 flex items-center gap-3">
-                        <i className="fas fa-file-invoice"></i> FO Desk Specification
+                      <h4 className="text-blue-400 font-black uppercase text-[10px] tracking-widest mb-6 flex items-center gap-3">
+                        <i className="fas fa-file-invoice"></i> FO Desk Spec
                       </h4>
-                      <ul className="space-y-4 text-xs text-slate-400 font-medium">
-                        <li className="flex gap-3"><i className="fas fa-check text-blue-500 mt-1"></i> System shall allow traders to book IRS/OIS trades.</li>
-                        <li className="flex gap-3"><i className="fas fa-check text-blue-500 mt-1"></i> System shall validate market curves before revaluation.</li>
-                        <li className="flex gap-3"><i className="fas fa-check text-blue-500 mt-1"></i> Trade repository must store JSON attributes for audit.</li>
+                      <ul className="space-y-4 text-[11px] text-slate-400 font-medium">
+                        <li className="flex gap-3"><i className="fas fa-check text-blue-500 mt-1"></i> System shall allow traders to book IR Swaps with reset schedules.</li>
+                        <li className="flex gap-3"><i className="fas fa-check text-blue-500 mt-1"></i> Curve validation required before pricing trigger.</li>
+                        <li className="flex gap-3"><i className="fas fa-check text-blue-500 mt-1"></i> Trade repository must enforce counterparty limits.</li>
                       </ul>
                     </section>
 
                     <section className="bg-slate-950 p-8 rounded-[2rem] border border-emerald-500/20 shadow-xl">
-                      <h4 className="text-emerald-400 font-black uppercase text-xs tracking-widest mb-6 flex items-center gap-3">
-                        <i className="fas fa-file-contract"></i> MO Desk Specification
+                      <h4 className="text-emerald-400 font-black uppercase text-[10px] tracking-widest mb-6 flex items-center gap-3">
+                        <i className="fas fa-chart-line"></i> MO Risk Spec
                       </h4>
-                      <ul className="space-y-4 text-xs text-slate-400 font-medium">
-                        <li className="flex gap-3"><i className="fas fa-check text-emerald-500 mt-1"></i> System shall calculate DV01/PV01 daily per book.</li>
-                        <li className="flex gap-3"><i className="fas fa-check text-emerald-500 mt-1"></i> VaR calculation must use Monte Carlo at 99% CI.</li>
-                        <li className="flex gap-3"><i className="fas fa-check text-emerald-500 mt-1"></i> Stress scenarios (+100bps) must trigger alerts.</li>
-                      </ul>
-                    </section>
-
-                    <section className="bg-slate-950 p-8 rounded-[2rem] border border-amber-500/20 shadow-xl">
-                      <h4 className="text-amber-400 font-black uppercase text-xs tracking-widest mb-6 flex items-center gap-3">
-                        <i className="fas fa-file-medical"></i> BO Desk Specification
-                      </h4>
-                      <ul className="space-y-4 text-xs text-slate-400 font-medium">
-                        <li className="flex gap-3"><i className="fas fa-check text-amber-500 mt-1"></i> Generate settlement instructions for T+2 cycles.</li>
-                        <li className="flex gap-3"><i className="fas fa-check text-amber-500 mt-1"></i> MT300/MT320 message generation for HFT books.</li>
-                        <li className="flex gap-3"><i className="fas fa-check text-amber-500 mt-1"></i> Reconcile trade repo vs payment break cache.</li>
-                      </ul>
-                    </section>
-
-                    <section className="bg-slate-950 p-8 rounded-[2rem] border border-slate-500/20 shadow-xl">
-                      <h4 className="text-slate-400 font-black uppercase text-xs tracking-widest mb-6 flex items-center gap-3">
-                        <i className="fas fa-file-code"></i> Technical Specification
-                      </h4>
-                      <ul className="space-y-4 text-xs text-slate-400 font-medium">
-                        <li className="flex gap-3"><i className="fas fa-check text-slate-500 mt-1"></i> Batch engine must support cron orchestration.</li>
-                        <li className="flex gap-3"><i className="fas fa-check text-slate-500 mt-1"></i> Logs must be parsed using standard Unix (awk/sed).</li>
-                        <li className="flex gap-3"><i className="fas fa-check text-slate-500 mt-1"></i> SQL schema must enforce referential integrity.</li>
+                      <ul className="space-y-4 text-[11px] text-slate-400 font-medium">
+                        <li className="flex gap-3"><i className="fas fa-check text-emerald-500 mt-1"></i> DV01 calculation per 1bp shift on yield term handles.</li>
+                        <li className="flex gap-3"><i className="fas fa-check text-emerald-500 mt-1"></i> Portfolio VaR computed daily using MC simulation (99%).</li>
+                        <li className="flex gap-3"><i className="fas fa-check text-emerald-500 mt-1"></i> Stress test scenario: +100bps parallel shift.</li>
                       </ul>
                     </section>
                   </div>
@@ -640,14 +621,14 @@ WHERE status = 'PRICED';`}
 
               {activeTab === 'tutor' && (
                 <div className="max-w-2xl mx-auto space-y-8 font-sans">
-                  <div className="flex gap-6 items-start bg-blue-600/10 p-8 rounded-[2.5rem] border border-blue-500/20">
+                  <div className="flex gap-6 items-start bg-blue-600/10 p-8 rounded-[2.5rem] border border-blue-500/20 shadow-2xl shadow-blue-500/10">
                     <div className="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-2xl flex-shrink-0">
                       <i className="fas fa-user-tie"></i>
                     </div>
                     <div className="space-y-4">
-                      <h4 className="text-white font-black text-xl">Senior Murex Consultant (L3)</h4>
+                      <h4 className="text-white font-black text-xl">L3 Support Certification</h4>
                       <p className="text-blue-100 text-sm leading-relaxed italic">
-                        "In an interview for a Murex role, they test for architectural data flow. When you explain this simulator, tell them: 'I've built a conceptual MX.3 front-to-back engine using QuantLib for reval and SQL for the trade repository.' That's what cracks the job."
+                        "Welcome, Architect. You are analyzing <strong>Trade Lifecycle Automation</strong>. In a Murex role, they test for architectural logic: how data flows from capture to GL. Master the reval logic, and the job is yours."
                       </p>
                     </div>
                   </div>
@@ -656,14 +637,14 @@ WHERE status = 'PRICED';`}
                     <button 
                       onClick={handleGenerateQuiz}
                       disabled={quizLoading}
-                      className="w-full bg-slate-950 hover:bg-blue-600 border border-white/10 text-white font-black py-5 rounded-[2rem] transition-all flex items-center justify-center gap-4 text-xs uppercase tracking-[0.2em] group"
+                      className="w-full bg-slate-950 hover:bg-blue-600 border border-white/10 text-white font-black py-5 rounded-[2rem] transition-all flex items-center justify-center gap-4 text-xs uppercase tracking-[0.2em] group shadow-2xl shadow-blue-500/10"
                     >
-                      {quizLoading ? <><i className="fas fa-atom animate-spin"></i> Generating Tech Question...</> : <><i className="fas fa-vial"></i> Take L2 Certification Quiz</>}
+                      {quizLoading ? <><i className="fas fa-atom animate-spin"></i> Analyzing Env...</> : <><i className="fas fa-vial"></i> Take L2 Technical Quiz</>}
                     </button>
                   ) : (
                     <div className="bg-slate-950 border border-white/10 rounded-[2.5rem] p-10 space-y-8 animate-in slide-in-from-bottom-8 duration-500">
                       <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">Module: {activeQuiz.context}</span>
+                        <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">Knowledge Check: {activeQuiz.context}</span>
                         <button onClick={() => setActiveQuiz(null)} className="text-white/20 hover:text-white"><i className="fas fa-times"></i></button>
                       </div>
                       <h4 className="text-white text-2xl font-black leading-tight tracking-tight">{activeQuiz.question}</h4>
@@ -673,15 +654,15 @@ WHERE status = 'PRICED';`}
                           <textarea 
                             value={quizAnswer}
                             onChange={(e) => setQuizAnswer(e.target.value)}
-                            placeholder="Explain the technical solution based on the simulator logic..."
-                            className="w-full bg-slate-900 border border-white/5 rounded-[2rem] p-6 text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all h-40 font-medium"
+                            placeholder="Explain the technical revaluation or batch logic here..."
+                            className="w-full bg-slate-900 border border-white/5 rounded-[2rem] p-6 text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all h-40 font-medium custom-scrollbar"
                           />
                           <button 
                             onClick={handleSubmitAnswer}
                             disabled={evaluating || !quizAnswer.trim()}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-3xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-3"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-3xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-blue-500/20"
                           >
-                            {evaluating ? <><i className="fas fa-brain animate-spin"></i> Analyzing Accuracy...</> : <><i className="fas fa-paper-plane"></i> Submit Answer</>}
+                            {evaluating ? <><i className="fas fa-brain animate-spin"></i> Grading...</> : <><i className="fas fa-paper-plane"></i> Submit Answer</>}
                           </button>
                         </div>
                       ) : (
@@ -707,11 +688,11 @@ WHERE status = 'PRICED';`}
               <div className="flex gap-4">
                 <span>CPU: 4%</span>
                 <span>MEM: 1.2GB/16GB</span>
-                <span>PID: 9029</span>
+                <span>PROV: ACTIVE</span>
               </div>
               <div className="flex gap-4">
-                <span className="text-emerald-400 animate-pulse">● SERVICE_READY</span>
-                <span>TZ: UTC+0</span>
+                <span className="text-emerald-400 animate-pulse">● REVAL_ENGINE_READY</span>
+                <span>UTC+0</span>
               </div>
             </div>
           </main>
@@ -744,7 +725,7 @@ WHERE status = 'PRICED';`}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-slate-200 pb-8">
         <div>
           <h1 className="text-5xl font-black text-slate-900 mb-2 uppercase tracking-tighter">Live Sandbox</h1>
-          <p className="text-slate-500 text-xl font-medium">Simulated enterprise environments for industrial-grade technical practice.</p>
+          <p className="text-slate-500 text-xl font-medium">Practice on industrial-grade conceptual simulations. No licenses required.</p>
         </div>
       </div>
 

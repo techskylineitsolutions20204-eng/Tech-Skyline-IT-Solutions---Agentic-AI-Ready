@@ -23,20 +23,20 @@ const categories: ResourceCategory[] = [
     title: "Murex Practice Stack (Open)",
     icon: "fa-building-columns",
     color: "amber",
-    description: "Replicate Murex MX.3 front-to-back architecture using zero-cost enterprise tools. Focus on IR/FX lifecycle, Risk logic, and Unix/SQL mastery.",
+    description: "Replicate Murex MX.3 logic using zero-cost enterprise tools. Focus on IR/FX lifecycle, Risk logic, and Unix/SQL mastery.",
     resources: [
-      { name: "OpenGamma (Risk & Analytics)", url: "https://opengamma.com", type: "Practice", isOfficial: true, murexArea: "MO Risk" },
       { name: "QuantLib (Pricing & Curves)", url: "https://www.quantlib.org/", type: "Practice", isOfficial: true, murexArea: "FO Pricing" },
-      { name: "SQLite3 (Trade Repository)", url: "https://www.sqlite.org/", type: "Sandbox", murexArea: "SQL/Database" },
-      { name: "Ubuntu (Unix & Batch Context)", url: "https://ubuntu.com/", type: "Sandbox", isOfficial: true, murexArea: "Unix Shell" },
+      { name: "OpenGamma (Risk Framework)", url: "https://opengamma.com", type: "Practice", isOfficial: true, murexArea: "MO Risk" },
       { name: "FRED Data (Yield Curves)", url: "https://fred.stlouisfed.org/", type: "Sandbox", murexArea: "Market Data" },
+      { name: "SQLite (Trade Repository)", url: "https://www.sqlite.org/", type: "Sandbox", murexArea: "SQL/Database" },
+      { name: "Ubuntu (Unix Context)", url: "https://ubuntu.com/", type: "Sandbox", isOfficial: true, murexArea: "Unix Shell" },
       { name: "Yahoo Finance (FX/IR Feed)", url: "https://finance.yahoo.com/", type: "Sandbox", murexArea: "Market Data" },
-      { name: "Apache Airflow (Batch Orchestration)", url: "https://airflow.apache.org/", type: "Practice", murexArea: "EOD Batch" },
+      { name: "Apache Airflow (Batch Jobs)", url: "https://airflow.apache.org/", type: "Practice", murexArea: "EOD Batch" },
       { name: "NumPy/SciPy (VaR & Greeks)", url: "https://numpy.org/", type: "Learn", murexArea: "Risk Engine" },
       { name: "Pandas (PnL Reporting)", url: "https://pandas.pydata.org/", type: "Practice", murexArea: "Middle Office" },
       { name: "SWIFT Standards (Settlement)", url: "https://www.swift.com/", type: "Docs", murexArea: "Back Office" },
       { name: "grep/awk/sed (Log Analysis)", url: "https://www.gnu.org/software/grep/", type: "Learn", murexArea: "MX Support" },
-      { name: "Jupyter (Pricing Notebooks)", url: "https://jupyter.org/", type: "Sandbox", murexArea: "Quant Lab" }
+      { name: "Trade Lifecycle Explained", url: "https://corporatefinanceinstitute.com/resources/derivatives/trade-life-cycle/", type: "Docs", murexArea: "Conceptual" }
     ]
   },
   {
