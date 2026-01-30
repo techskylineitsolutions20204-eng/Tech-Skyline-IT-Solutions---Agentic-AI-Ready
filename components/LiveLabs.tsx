@@ -13,6 +13,14 @@ interface Lab {
 
 const labs: Lab[] = [
   { 
+    title: 'Murex Financial Architecture', 
+    env: 'QuantLib + Python + PostgreSQL', 
+    duration: '150 mins', 
+    diff: 'Advanced',
+    img: 'https://images.unsplash.com/photo-1611974714851-eb6051612342?auto=format&fit=crop&q=80&w=800',
+    tasks: ['Simulate Trade Lifecycle (IRS/FX)', 'Configure QuantLib Pricing Engine', 'Design PostgreSQL Trade Schema', 'Execute Unix Batch Reconciliation']
+  },
+  { 
     title: 'Agentic Workflow Automation', 
     env: 'LangGraph + AWS Bedrock', 
     duration: '120 mins', 
@@ -51,14 +59,6 @@ const labs: Lab[] = [
     diff: 'Intermediate',
     img: 'https://images.unsplash.com/photo-1551288049-bbbda536339a?auto=format&fit=crop&q=80&w=800',
     tasks: ['Setup Databricks cluster', 'Ingest Kaggle dataset', 'Perform Spark SQL cleaning', 'Create Power BI dashboard']
-  },
-  { 
-    title: 'Murex Development Basics', 
-    env: 'Murex Binary Env', 
-    duration: '150 mins', 
-    diff: 'Intermediate',
-    img: 'https://images.unsplash.com/photo-1611974714851-eb6051612342?auto=format&fit=crop&q=80&w=800',
-    tasks: ['Initialize Murex session', 'Configure contract definitions', 'Test trade workflow', 'Audit reporting engine']
   },
 ];
 
@@ -244,7 +244,8 @@ const LiveLabs: React.FC = () => {
                           if (val === 'ls') runCommand(val, 'src/  configs/  scripts/  requirements.txt');
                           else if (val.includes('deploy')) runCommand(val, '[INFO] Initiating deployment sequence... 100% SUCCESS');
                           else if (val.includes('clear')) setTerminalLines([]);
-                          else runCommand(val, `Command not recognized: ${val}. Try 'deploy' or 'ls'`);
+                          else if (val.includes('sql')) runCommand(val, 'SELECT count(*) FROM trades; -- Result: 1,420 trades found.');
+                          else runCommand(val, `Command not recognized: ${val}. Try 'deploy', 'ls', or 'sql'`);
                         }
                       }}
                     />
@@ -253,14 +254,15 @@ const LiveLabs: React.FC = () => {
               )}
 
               {activeTab === 'docs' && (
-                <div className="prose prose-invert max-w-none text-slate-400">
-                  <h3 className="text-white">Environment Details</h3>
-                  <p>This production sandbox provides pre-configured access to the {selectedLab.env} stack. Your workspace is persistent for the duration of this session.</p>
-                  <ul className="space-y-2">
-                    <li><strong>API Endpoint:</strong> https://lab-api.skyline-it.com</li>
-                    <li><strong>Region:</strong> us-east-1 (Simulated)</li>
-                    <li><strong>Secrets:</strong> Access keys are automatically injected into ENV vars.</li>
+                <div className="prose prose-invert max-w-none text-slate-400 p-4">
+                  <h3 className="text-white">Murex Replication Lab Guide</h3>
+                  <p>In this lab, you replicate the core functionality of Murex using open tools:</p>
+                  <ul className="space-y-2 list-disc pl-5">
+                    <li><strong>QuantLib:</strong> Used as the pricing engine for IRS and FX swaps.</li>
+                    <li><strong>PostgreSQL:</strong> Replicates MX database tables for Trade Booking and Static Data.</li>
+                    <li><strong>Unix:</strong> Master 'grep', 'awk', and shell scripts for EOD (End of Day) processing.</li>
                   </ul>
+                  <p className="mt-4 text-xs italic">"Real industry value lies in the trade lifecycle logic, not just the UI."</p>
                 </div>
               )}
 
@@ -272,11 +274,11 @@ const LiveLabs: React.FC = () => {
                     </div>
                     <div className="space-y-3">
                       <p className="text-blue-200 text-sm leading-relaxed">
-                        I'm your **Agentic Sidekick**. It looks like you're working on the <strong>{selectedLab.tasks[completedTasks.length] || 'final module'}</strong>. 
+                        I'm your **Industry Mentor**. It looks like you're working on <strong>{selectedLab.tasks[completedTasks.length] || 'final module'}</strong>. 
                       </p>
-                      <p className="text-white text-xs font-bold uppercase tracking-widest">Logic Hint:</p>
+                      <p className="text-white text-xs font-bold uppercase tracking-widest">Architectural Hint:</p>
                       <p className="text-slate-400 text-xs italic">
-                        "Ensure your state variables are immutable before passing them to the next node in the graph. Check your indentation in the logic file."
+                        "For Trade Reconciliation, remember to check the 'MX_ID' mapping in your PostgreSQL schema. Use 'awk' to filter the log files by timestamp for the EOD report."
                       </p>
                     </div>
                   </div>
@@ -450,7 +452,7 @@ const LiveLabs: React.FC = () => {
                   <i className="far fa-clock text-blue-500"></i> {lab.duration}
                 </span>
                 <span className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-                  <i className="fas fa-users text-blue-500"></i> 1.2k Active
+                  <i className="fas fa-users text-blue-500"></i> Active Labs
                 </span>
               </div>
               

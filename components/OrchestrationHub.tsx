@@ -35,6 +35,45 @@ const orchestrationData: HubCategory[] = [
       { title: "Agentic orchestration", description: "Manage distributed AI agents, robots, and people in unified workflows", icon: "fa-sitemap", tag: "Management" },
       { title: "Intelligent document processing", description: "Extract data from unstructured docs using OCR, NLP, and ML models", icon: "fa-file-invoice", tag: "IDP" }
     ]
+  },
+  {
+    sectionTitle: "RPA Fundamentals & Scaling",
+    sectionDesc: "Traditional automation meeting the cognitive capabilities of modern AI.",
+    colorTheme: "emerald",
+    items: [
+      { title: "What is RPA", description: "Software robots that mimic human interactions with digital systems", icon: "fa-window-restore", tag: "Basics" },
+      { title: "AI and RPA", description: "Blend intelligent AI capabilities with traditional RPA automation", icon: "fa-handshake", tag: "Hybrid" },
+      { title: "What is citizen development", description: "No-code tools that let business users create their own automations", icon: "fa-users-gear", tag: "No-Code" },
+      { title: "What is process mining", description: "Find hidden problems by watching how work actually gets done", icon: "fa-magnifying-glass-chart", tag: "Analysis" },
+      { title: "No-code automation", description: "Drag-and-drop automation builder requiring zero programming skills", icon: "fa-wand-magic-sparkles", tag: "Accessibility" },
+      { title: "Business process automation", description: "Transform entire workflows from start to finish", icon: "fa-briefcase", tag: "Business" },
+      { title: "Process orchestration", description: "Coordinate complex business processes across enterprise systems", icon: "fa-arrows-split-up-and-left", tag: "Advanced" }
+    ]
+  },
+  {
+    sectionTitle: "Agentic Testing & QA",
+    sectionDesc: "Autonomous test agents that generate, execute, and adapt QA strategies.",
+    colorTheme: "rose",
+    items: [
+      { title: "Agentic testing", description: "Autonomous test agents that generate, execute, and adapt QA strategies", icon: "fa-vial-circle-check", tag: "Testing" },
+      { title: "Software testing", description: "Traditional QA automation enhanced with AI-powered capabilities", icon: "fa-code-compare", tag: "QA" },
+      { title: "Test automation", description: "Scripted test execution for regression and functional testing", icon: "fa-terminal", tag: "Standard" }
+    ]
+  },
+  {
+    sectionTitle: "Ways to Automate",
+    sectionDesc: "Step-by-step frameworks and specialized ecosystem integrations.",
+    colorTheme: "indigo",
+    items: [
+      { title: "SAP automation", description: "Automate SAP workflows without changing core system configuration", icon: "fa-server", tag: "ERP" },
+      { title: "Web automation", description: "Control browsers, fill forms, and extract web data automatically", icon: "fa-globe", tag: "Web" },
+      { title: "Desktop automation", description: "Automate Windows, Mac, and Linux desktop application interactions", icon: "fa-desktop", tag: "OS" },
+      { title: "Email automation", description: "Auto-sort, process, and respond to emails using AI understanding", icon: "fa-envelope-open-text", tag: "Communication" },
+      { title: "API automation", description: "Integrate systems by automating REST, SOAP, and GraphQL API calls", icon: "fa-link", tag: "Dev" },
+      { title: "UI automation", description: "Interact with any app interface using clicks, keystrokes, and OCR", icon: "fa-mouse-pointer", tag: "UI" },
+      { title: "Document automation", description: "Process invoices, contracts, and forms with structured automation", icon: "fa-file-lines", tag: "Docs" },
+      { title: "Excel automation", description: "Automate Excel formulas, macros, and data manipulation tasks", icon: "fa-file-excel", tag: "Office" }
+    ]
   }
 ];
 
@@ -43,7 +82,7 @@ const OrchestrationHub: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const renderAgentPath = () => (
-    <div className="space-y-24 animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="space-y-24 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-24">
       {/* Hero AgentPath */}
       <section className="bg-skyline-gradient rounded-[3.5rem] p-12 text-white relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
@@ -53,7 +92,7 @@ const OrchestrationHub: React.FC = () => {
           </div>
           <h1 className="text-6xl font-black mb-6 leading-tight">The developer’s path to <br/><span className="text-blue-400">agentic automation</span></h1>
           <p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl">
-            Build your next agentic automation project with the Tech Skyline Platform™. Move from simple scripts to autonomous digital workers.
+            Build your next agentic automation project with the Tech Skyline Platform™. Move from simple scripts to autonomous digital workers that see, think, and act.
           </p>
           <div className="flex flex-wrap gap-4">
             <button className="bg-white text-slate-900 font-black py-4 px-10 rounded-2xl shadow-xl hover:bg-slate-100 transition-all flex items-center gap-2">
@@ -66,136 +105,131 @@ const OrchestrationHub: React.FC = () => {
         </div>
       </section>
 
-      {/* Core Agents Row */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { title: "Agent Builder", desc: "Build, test, and launch agents within a familiar environment.", icon: "fa-hammer", color: "blue" },
-          { title: "Skyline Maestro", desc: "Orchestrate third-party agents and robots across complex workflows.", icon: "fa-wand-sparkles", color: "indigo" },
-          { title: "Healing Agent", desc: "Ensure resilient automations with intelligent self-healing UI capabilities.", icon: "fa-heart-pulse", color: "rose" },
-          { title: "Autopilot™", desc: "AI-powered experiences tailored for developers and analysts.", icon: "fa-plane-up", color: "cyan" }
-        ].map((item, i) => (
-          <div key={i} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
-            <div className={`w-14 h-14 rounded-2xl bg-${item.color}-50 text-${item.color}-600 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform`}>
-              <i className={`fas ${item.icon}`}></i>
-            </div>
-            <h3 className="text-xl font-black mb-3 text-slate-900">{item.title}</h3>
-            <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Featured Tutorial Section */}
-      <section className="bg-slate-50 rounded-[4rem] p-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center border border-slate-200">
-        <div className="space-y-8">
-          <h2 className="text-4xl font-black text-slate-900 tracking-tight">How to build your first AI agent from scratch</h2>
-          <p className="text-lg text-slate-500 leading-relaxed">
-            Discover a step-by-step tutorial on building your first autonomous agent. Learn about context grounding, multi-agent coordination, and deployment governance.
-          </p>
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4 p-4 bg-white rounded-3xl border border-slate-100 shadow-sm">
-              <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden border-2 border-white shadow-sm">
-                <img src="https://picsum.photos/48/48?seed=nisarg" alt="Mentor" />
+      {/* Featured Agent Suite */}
+      <section className="space-y-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-black text-slate-900 mb-2">Specialized Agent Suite</h2>
+          <p className="text-slate-500">Autonomous capabilities tailored for the enterprise lifecycle.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { 
+              title: "Agent Builder", 
+              desc: "Build, test, and launch agents from within the familiar Studio environment. Use prebuilt agents from the Catalog.", 
+              icon: "fa-hammer", 
+              color: "blue",
+              detail: "Discover Agent Builder"
+            },
+            { 
+              title: "Skyline Maestro", 
+              desc: "Agentic orchestration to manage Skyline Agents, third-party agents, robots, and people across complex workflows.", 
+              icon: "fa-wand-sparkles", 
+              color: "indigo",
+              detail: "Try Maestro"
+            },
+            { 
+              title: "Healing Agent", 
+              desc: "Ensure your automations remain resilient despite application changes. Includes intelligent self-healing and fixing.", 
+              icon: "fa-heart-pulse", 
+              color: "rose",
+              detail: "Enable Self-Healing"
+            },
+            { 
+              title: "Autopilot™", 
+              desc: "AI-powered experiences across the platform, tailored for developers, analysts, testers, or business users.", 
+              icon: "fa-plane-up", 
+              color: "cyan",
+              detail: "Discover Autopilot"
+            }
+          ].map((item, i) => (
+            <div key={i} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all group flex flex-col h-full">
+              <div className={`w-14 h-14 rounded-2xl bg-${item.color}-50 text-${item.color}-600 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform`}>
+                <i className={`fas ${item.icon}`}></i>
               </div>
-              <div>
-                <p className="font-black text-slate-900 leading-none">Nisarg Kadam</p>
-                <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mt-1">Skyline MVP 2025</p>
-              </div>
-              <button className="ml-auto bg-slate-900 text-white text-[10px] font-black py-2 px-4 rounded-xl uppercase tracking-widest hover:bg-blue-600 transition-all">
-                Watch Tutorial
+              <h3 className="text-xl font-black mb-3 text-slate-900">{item.title}</h3>
+              <p className="text-slate-500 text-sm leading-relaxed flex-1 mb-6">{item.desc}</p>
+              <button className={`text-xs font-black text-${item.color}-600 uppercase tracking-widest flex items-center gap-2 group/btn`}>
+                {item.detail} <i className="fas fa-arrow-right-long transition-transform group-hover/btn:translate-x-1"></i>
               </button>
             </div>
-          </div>
-        </div>
-        <div className="relative rounded-[3rem] overflow-hidden shadow-2xl aspect-video bg-slate-900 group">
-          <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800" alt="Tutorial Preview" className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white text-3xl shadow-2xl shadow-blue-500/50 group-hover:scale-110 transition-transform cursor-pointer">
-              <i className="fas fa-play ml-1"></i>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Events & Learning */}
+      {/* Learning & Tutorials Row */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
-            <i className="fas fa-calendar-star text-blue-600"></i>
-            Agentic Community Events
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-black text-slate-900">Developer Tutorials</h2>
+            <button className="text-xs font-black text-blue-600 uppercase tracking-widest">View Catalog</button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              { title: "Skyline DevCon", desc: "Signature AI and automation event with 30+ technical sessions.", icon: "fa-terminal", badge: "Watch Replay" },
-              { title: "Community Days", desc: "In-person workshops in your city. Hands-on agentic practice.", icon: "fa-users", badge: "Explore Events" },
-              { title: "Dev Dives", desc: "Monthly webinars led by product managers and evangelists.", icon: "fa-video", badge: "Join Live" },
-              { title: "Discovery Framework", desc: "Fundamentals of uncovering opportunities for agentic AI.", icon: "fa-microscope", badge: "Enroll Now" }
-            ].map((ev, i) => (
-              <div key={i} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:border-blue-200 transition-all">
-                <i className={`fas ${ev.icon} text-blue-600 text-xl mb-6`}></i>
-                <h3 className="text-lg font-black mb-2 text-slate-900">{ev.title}</h3>
-                <p className="text-sm text-slate-500 mb-6 leading-relaxed">{ev.desc}</p>
-                <button className="text-xs font-black text-blue-600 uppercase tracking-widest flex items-center gap-2 group">
-                  {ev.badge} <i className="fas fa-arrow-right-long transition-transform group-hover:translate-x-1"></i>
-                </button>
+              { title: "First AI Agent from Scratch", mentor: "Nisarg Kadam", role: "Skyline MVP 2025", type: "Watch Tutorial" },
+              { title: "Browse Agent Catalog", mentor: "Marketplace Team", role: "Official Templates", type: "Get Catalog" },
+              { title: "Set up Autopilot for Everyone", mentor: "Lahiru Fernando", role: "Skyline MVP 2025", type: "Watch Tutorial" },
+              { title: "Try Autopilot Automations", mentor: "Community Experts", role: "Role-Tailored", type: "Get Collection" }
+            ].map((t, i) => (
+              <div key={i} className="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-4 hover:border-blue-200 transition-all cursor-pointer">
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+                  <i className="fas fa-video"></i>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-black text-slate-900 text-sm leading-tight mb-1">{t.title}</h4>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{t.mentor} • {t.role}</p>
+                </div>
+                <i className="fas fa-chevron-right text-slate-200"></i>
               </div>
             ))}
           </div>
         </div>
-
-        <div className="space-y-8">
-          <h2 className="text-3xl font-black text-slate-900">Knowledge Hub</h2>
-          <div className="bg-slate-900 rounded-[3rem] p-8 text-white space-y-8">
-            <div className="space-y-4">
-              <p className="text-[10px] font-black uppercase text-blue-400 tracking-widest">Recent Deep Dives</p>
-              <div className="space-y-6">
-                {[
-                  "AI agent development made simple",
-                  "UI vs LLM-based automation",
-                  "Context Grounding in Healthcare",
-                  "Getting started with Agentic AI"
-                ].map((blog, i) => (
-                  <div key={i} className="group cursor-pointer">
-                    <p className="font-bold text-slate-200 group-hover:text-blue-400 transition-colors leading-snug">{blog}</p>
-                    <div className="flex items-center gap-2 text-[10px] text-slate-500 font-black uppercase tracking-widest mt-1">
-                      READ BLOG <i className="fas fa-arrow-right text-[8px]"></i>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="pt-8 border-t border-white/5 grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1 items-center justify-center p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all cursor-pointer">
-                <i className="fab fa-discord text-xl text-indigo-400"></i>
-                <span className="text-[10px] font-black uppercase">Discord</span>
-              </div>
-              <div className="flex flex-col gap-1 items-center justify-center p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all cursor-pointer">
-                <i className="fas fa-comments text-xl text-emerald-400"></i>
-                <span className="text-[10px] font-black uppercase">Forum</span>
-              </div>
-              <div className="flex flex-col gap-1 items-center justify-center p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all cursor-pointer">
-                <i className="fas fa-book text-xl text-blue-400"></i>
-                <span className="text-[10px] font-black uppercase">Docs</span>
-              </div>
-              <div className="flex flex-col gap-1 items-center justify-center p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all cursor-pointer">
-                <i className="fas fa-newspaper text-xl text-amber-400"></i>
-                <span className="text-[10px] font-black uppercase">News</span>
-              </div>
-            </div>
+        <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white flex flex-col justify-between">
+          <div>
+            <span className="text-[10px] font-black uppercase text-blue-400 tracking-widest mb-4 block">Academy Hub</span>
+            <h3 className="text-2xl font-black mb-4">Enroll in the agentic discovery framework</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Learn to apply our framework to uncover opportunities for agentic automation in your organization. Master fundamentals of autonomous system design.
+            </p>
           </div>
+          <button className="mt-8 bg-blue-600 text-white font-black py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-all">
+            Enroll Now
+          </button>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="text-center bg-blue-600 rounded-[4rem] p-20 text-white relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent"></div>
-        <div className="relative z-10 space-y-8">
-          <h2 className="text-5xl font-black max-w-2xl mx-auto">Be the first to try our new agentic capabilities</h2>
-          <p className="text-xl text-blue-100 max-w-xl mx-auto opacity-80">
+      {/* Community Section */}
+      <section className="bg-white rounded-[3.5rem] p-12 border border-slate-100 shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {[
+          { title: "Skyline Community", desc: "Connect with experts and peers on the latest trends.", icon: "fa-users", action: "Join Community" },
+          { title: "Skyline Forum", desc: "Get support from peers and learn about latest releases.", icon: "fa-comments", action: "Sign up" },
+          { title: "Community Newsletter", desc: "Latest on automation development to your inbox.", icon: "fa-envelope-open-text", action: "Subscribe" },
+          { title: "Skyline Documentation", desc: "Explore guides to support your journey.", icon: "fa-book", action: "Search Docs" }
+        ].map((c, i) => (
+          <div key={i} className="space-y-4">
+            <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-900 flex items-center justify-center">
+              <i className={`fas ${c.icon}`}></i>
+            </div>
+            <h4 className="font-black text-slate-900">{c.title}</h4>
+            <p className="text-xs text-slate-500 leading-relaxed">{c.desc}</p>
+            <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-2 group">
+              {c.action} <i className="fas fa-arrow-right-long transition-transform group-hover:translate-x-1"></i>
+            </button>
+          </div>
+        ))}
+      </section>
+
+      {/* Insider CTA */}
+      <section className="text-center bg-blue-600 rounded-[3rem] p-16 text-white relative overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12">
+          <i className="fas fa-bolt text-[15rem]"></i>
+        </div>
+        <div className="relative z-10 space-y-6">
+          <h2 className="text-4xl font-black">Be the first to try our new agentic capabilities</h2>
+          <p className="text-lg text-blue-100 max-w-xl mx-auto opacity-80 font-medium">
             Become a Skyline Insider to participate in the new previews of our agentic orchestration platform.
           </p>
-          <button className="bg-slate-900 text-white font-black py-5 px-14 rounded-3xl shadow-2xl hover:bg-slate-800 transition-all text-xl">
-            Join Insider Program
+          <button className="bg-slate-900 text-white font-black py-5 px-14 rounded-2xl shadow-xl hover:bg-slate-800 transition-all text-lg">
+            Become an Insider
           </button>
         </div>
       </section>

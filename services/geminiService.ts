@@ -18,6 +18,11 @@ export const generateRoadmap = async (domain: TechDomain, role: string): Promise
   - Emphasize real-time practice, live cloud labs, and production-grade scenarios.
   - Align with industry certifications and enterprise use cases.
   
+  INDUSTRY CONTEXT (MANDATORY ALIGNMENT):
+  1. If domain is Enterprise/ERP and role relates to Murex: Focus on Trade Lifecycle, Market Data (QuantLib/Python), Risk & PnL, SQL performance tuning, and Unix Batch Orchestration.
+  2. If domain is Agentic AI: Focus on Multi-agent systems, Agentic Orchestration (Maestro/LangGraph), Healing Agents, and Autopilot integration.
+  3. If domain is Cloud: Focus on SRE, Kubernetes, and Zero-trust security.
+  
   The response must be a JSON object matching this schema:
   {
     "domain": "string",
@@ -29,7 +34,7 @@ export const generateRoadmap = async (domain: TechDomain, role: string): Promise
         "level": "Beginner | Intermediate | Advanced",
         "description": "string",
         "tools": ["string"],
-        "labIdea": "string (Concrete project or live lab scenario)",
+        "labIdea": "string (Concrete project or live lab scenario using open tools to replicate enterprise features)",
         "assessmentStrategy": "string (How to measure competence)",
         "skillOutcomes": ["string"],
         "certifications": ["string"]
@@ -39,7 +44,7 @@ export const generateRoadmap = async (domain: TechDomain, role: string): Promise
     "careerAlignment": "string (Summary of market demand and roles)"
   }
   
-  Ensure the tools and labs are specific to the domain provided (e.g., if SAP, mention IBP/S4HANA; if Agentic AI, mention LangGraph/Bedrock).`;
+  Ensure the tools and labs are specific to the domain provided. For Murex specialists, recommend open equivalents like QuantLib or OpenGamma for conceptual mastery.`;
 
   const response = await ai.models.generateContent({
     model: "gemini-3-pro-preview",

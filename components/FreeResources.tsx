@@ -7,16 +7,34 @@ interface Resource {
   url: string;
   type: 'Learn' | 'Practice' | 'Sandbox' | 'Docs';
   isOfficial?: boolean;
+  murexArea?: string;
 }
 
 interface ResourceCategory {
   title: string;
   icon: string;
   color: string;
+  description?: string;
   resources: Resource[];
 }
 
 const categories: ResourceCategory[] = [
+  {
+    title: "Murex Practice Stack",
+    icon: "fa-building-columns",
+    color: "amber",
+    description: "Replicate enterprise trading logic with open-source engineering tools.",
+    resources: [
+      { name: "OpenGamma (Trade Booking)", url: "https://opengamma.com", type: "Practice", isOfficial: true, murexArea: "Lifecycle" },
+      { name: "QuantLib (Pricing Engine)", url: "https://www.quantlib.org/", type: "Practice", isOfficial: true, murexArea: "Pricing" },
+      { name: "Alpha Vantage (FX Feed)", url: "https://www.alphavantage.co/", type: "Sandbox", murexArea: "Mkt Data" },
+      { name: "FRED Economic Data (IR Curves)", url: "https://fred.stlouisfed.org/", type: "Sandbox", murexArea: "Mkt Data" },
+      { name: "PostgreSQL (Trade Tables)", url: "https://www.postgresql.org/", type: "Sandbox", murexArea: "DB/SQL" },
+      { name: "TimescaleDB (PnL Storage)", url: "https://www.timescale.com/", type: "Practice", murexArea: "Risk" },
+      { name: "Ubuntu (Unix Support)", url: "https://ubuntu.com/", type: "Sandbox", isOfficial: true, murexArea: "Unix/Batch" },
+      { name: "Yahoo Finance API (Equity)", url: "https://pypi.org/project/yfinance/", type: "Practice", murexArea: "Mkt Data" }
+    ]
+  },
   {
     title: "Agentic AI & LLMs",
     icon: "fa-brain",
@@ -99,28 +117,6 @@ const categories: ResourceCategory[] = [
       { name: "TryHackMe Free", url: "https://tryhackme.com/", type: "Practice" },
       { name: "Kubernetes Labs", url: "https://labs.play-with-k8s.com/", type: "Sandbox" }
     ]
-  },
-  {
-    title: "UI & App Frameworks",
-    icon: "fa-window-maximize",
-    color: "amber",
-    resources: [
-      { name: "Streamlit (AI Dashboards)", url: "https://streamlit.io/", type: "Practice" },
-      { name: "Gradio (Chat UI)", url: "https://gradio.app/", type: "Practice" },
-      { name: "FastAPI Backend", url: "https://fastapi.tiangolo.com/", type: "Docs" },
-      { name: "Flask Web Dev", url: "https://flask.palletsprojects.com/", type: "Docs" }
-    ]
-  },
-  {
-    title: "Enterprise Systems",
-    icon: "fa-building",
-    color: "orange",
-    resources: [
-      { name: "SAP Learning Hub", url: "https://learning.sap.com/", type: "Learn", isOfficial: true },
-      { name: "Oracle Learning", url: "https://education.oracle.com/", type: "Learn", isOfficial: true },
-      { name: "UiPath Community", url: "https://www.uipath.com/developers/", type: "Sandbox" },
-      { name: "Open edX (LMS)", url: "https://openedx.org/", type: "Practice" }
-    ]
   }
 ];
 
@@ -131,26 +127,27 @@ const FreeResources: React.FC = () => {
     ...cat,
     resources: cat.resources.filter(res => 
       res.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      cat.title.toLowerCase().includes(searchTerm.toLowerCase())
+      cat.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      res.murexArea?.toLowerCase().includes(searchTerm.toLowerCase())
     )
   })).filter(cat => cat.resources.length > 0);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 pb-24">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-2">Free Resource Hub</h1>
-          <p className="text-slate-500">Curated directory of the world's best zero-cost technical learning and practice tools.</p>
+          <h1 className="text-4xl font-extrabold text-slate-900 mb-2 uppercase tracking-tighter">Resource Hub</h1>
+          <p className="text-slate-500 font-medium">Curated zero-cost technical mastery stack for industry specialists.</p>
         </div>
         <div className="relative w-full md:w-96">
           <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true"></i>
           <input 
             type="text" 
-            placeholder="Search LLMs, Frameworks, DBs..." 
+            placeholder="Search Murex, LLMs, Cloud..." 
             aria-label="Search resources"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-white rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all"
+            className="w-full pl-12 pr-4 py-3 bg-white rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all text-sm font-bold"
           />
         </div>
       </div>
@@ -165,7 +162,7 @@ const FreeResources: React.FC = () => {
               <h2 className="text-xl font-bold tracking-tight">{cat.title}</h2>
             </div>
             
-            <div className="p-4 flex-1 space-y-1.5 overflow-y-auto max-h-[350px] custom-scrollbar">
+            <div className="p-4 flex-1 space-y-1.5 overflow-y-auto max-h-[450px] custom-scrollbar">
               {cat.resources.map((res, rIdx) => (
                 <a 
                   key={rIdx}
@@ -173,21 +170,27 @@ const FreeResources: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-all group/item"
-                  aria-label={`Open ${res.name} ${res.type}`}
                 >
                   <div className="flex flex-col">
                     <span className="text-sm font-bold text-slate-800 flex items-center gap-2 group-hover/item:text-blue-600 transition-colors">
                       {res.name}
                       {res.isOfficial && (
-                        <i className="fas fa-circle-check text-blue-500 text-[10px]" title="Official/Partner Resource" aria-hidden="true"></i>
+                        <i className="fas fa-circle-check text-blue-500 text-[10px]" title="Official/Partner Resource"></i>
                       )}
                     </span>
-                    <span className={`text-[9px] uppercase font-black tracking-widest ${
-                      res.type === 'Sandbox' ? 'text-emerald-500' : 
-                      res.type === 'Learn' ? 'text-blue-500' : 'text-slate-400'
-                    }`}>
-                      {res.type}
-                    </span>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className={`text-[9px] uppercase font-black tracking-widest ${
+                        res.type === 'Sandbox' ? 'text-emerald-500' : 
+                        res.type === 'Learn' ? 'text-blue-500' : 'text-slate-400'
+                      }`}>
+                        {res.type}
+                      </span>
+                      {res.murexArea && (
+                        <span className="text-[8px] bg-amber-100 text-amber-700 font-black px-1.5 py-0.5 rounded uppercase tracking-tighter">
+                          {res.murexArea}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <i className="fas fa-arrow-up-right-from-square text-slate-200 group-hover/item:text-blue-400 transition-colors text-xs"></i>
                 </a>
@@ -200,13 +203,17 @@ const FreeResources: React.FC = () => {
       <div className="bg-skyline-gradient rounded-[3rem] p-10 text-white flex flex-col md:flex-row items-center gap-8 border border-white/10 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[100px] pointer-events-none"></div>
         <div className="flex-1 relative z-10">
-          <h3 className="text-2xl font-black mb-3">Build an Agentic AI Tutor</h3>
-          <p className="text-slate-400 leading-relaxed max-w-xl">
-            Use the stack above (LangGraph + Gemini + Chroma + Streamlit) to build an autonomous tutor that adapts to learner mistakes in real-time. Start with Google Colab for zero-cost GPU labs.
+          <h3 className="text-2xl font-black mb-3">Enterprise Concept Replication</h3>
+          <p className="text-slate-400 leading-relaxed max-w-2xl font-medium">
+            Master specialized platforms like Murex or SAP by replicating their architectural logic with open tools. 
+            Use PostgreSQL for trade tables, QuantLib for pricing, and Python/Unix for batch orchestration. 
+            Real industry value lies in the lifecycle logic, not just the UI. 
+            <br/><br/>
+            <strong>90% of Murex support work</strong> is Unix, SQL, and Batch management.
           </p>
         </div>
-        <Link to="/tutor-stack" className="bg-white text-slate-900 hover:bg-blue-50 font-black py-4 px-10 rounded-2xl shadow-xl transition-all relative z-10 whitespace-nowrap">
-          View Demo Architecture
+        <Link to="/explore" className="bg-blue-600 text-white hover:bg-blue-700 font-black py-4 px-10 rounded-2xl shadow-xl transition-all relative z-10 whitespace-nowrap">
+          Architect Roadmap
         </Link>
       </div>
     </div>
