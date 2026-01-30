@@ -23,16 +23,26 @@ const categories: ResourceCategory[] = [
     title: "Murex Practice Stack",
     icon: "fa-building-columns",
     color: "amber",
-    description: "Replicate enterprise trading logic with open-source engineering tools.",
+    description: "Replicate Murex MX.3 logical architecture using zero-cost enterprise-grade open source tools.",
     resources: [
-      { name: "OpenGamma (Trade Booking)", url: "https://opengamma.com", type: "Practice", isOfficial: true, murexArea: "Lifecycle" },
-      { name: "QuantLib (Pricing Engine)", url: "https://www.quantlib.org/", type: "Practice", isOfficial: true, murexArea: "Pricing" },
-      { name: "Alpha Vantage (FX Feed)", url: "https://www.alphavantage.co/", type: "Sandbox", murexArea: "Mkt Data" },
-      { name: "FRED Economic Data (IR Curves)", url: "https://fred.stlouisfed.org/", type: "Sandbox", murexArea: "Mkt Data" },
-      { name: "PostgreSQL (Trade Tables)", url: "https://www.postgresql.org/", type: "Sandbox", murexArea: "DB/SQL" },
-      { name: "TimescaleDB (PnL Storage)", url: "https://www.timescale.com/", type: "Practice", murexArea: "Risk" },
-      { name: "Ubuntu (Unix Support)", url: "https://ubuntu.com/", type: "Sandbox", isOfficial: true, murexArea: "Unix/Batch" },
-      { name: "Yahoo Finance API (Equity)", url: "https://pypi.org/project/yfinance/", type: "Practice", murexArea: "Mkt Data" }
+      { name: "OpenGamma (Trade Lifecycle)", url: "https://opengamma.com", type: "Practice", isOfficial: true, murexArea: "Booking" },
+      { name: "QuantLib (Pricing/Greeks)", url: "https://www.quantlib.org/", type: "Practice", isOfficial: true, murexArea: "Pricing" },
+      { name: "PostgreSQL (Trade Tables)", url: "https://www.postgresql.org/", type: "Sandbox", murexArea: "Database" },
+      { name: "MySQL (Static Data)", url: "https://www.mysql.com/", type: "Sandbox", murexArea: "Static" },
+      { name: "Ubuntu (Unix Context)", url: "https://ubuntu.com/", type: "Sandbox", isOfficial: true, murexArea: "Unix/OS" },
+      { name: "TimescaleDB (PnL Storage)", url: "https://www.timescale.com/", type: "Practice", murexArea: "Reporting" },
+      { name: "FRED Data (IR Curves)", url: "https://fred.stlouisfed.org/", type: "Sandbox", murexArea: "Mkt Data" },
+      { name: "Alpha Vantage (FX Rates)", url: "https://www.alphavantage.co/", type: "Sandbox", murexArea: "Mkt Data" },
+      { name: "Yahoo Finance (Equities)", url: "https://pypi.org/project/yfinance/", type: "Practice", murexArea: "Mkt Data" },
+      { name: "QuantLib + Python (VaR)", url: "https://www.quantlib.org/", type: "Learn", murexArea: "Risk" },
+      { name: "Shell/Bash (Batch Jobs)", url: "https://www.gnu.org/software/bash/", type: "Learn", murexArea: "Batch" },
+      { name: "Cron (EOD Scheduling)", url: "https://crontab.guru/", type: "Sandbox", murexArea: "EOD" },
+      { name: "Pandas (Risk Reports)", url: "https://pandas.pydata.org/", type: "Practice", murexArea: "Reporting" },
+      { name: "Jupyter (Sensitivities)", url: "https://jupyter.org/", type: "Sandbox", murexArea: "Front-Off" },
+      { name: "grep/awk/sed (Log Mgmt)", url: "https://www.gnu.org/software/grep/", type: "Learn", murexArea: "Support" },
+      { name: "Kafka (Integration)", url: "https://kafka.apache.org/", type: "Practice", murexArea: "GOM" },
+      { name: "Python NumPy (Calibration)", url: "https://numpy.org/", type: "Learn", murexArea: "Models" },
+      { name: "CSV/XML (File Feeds)", url: "https://en.wikipedia.org/wiki/XML", type: "Docs", murexArea: "Integration" }
     ]
   },
   {
@@ -49,18 +59,6 @@ const categories: ResourceCategory[] = [
     ]
   },
   {
-    title: "Agent Frameworks",
-    icon: "fa-network-wired",
-    color: "indigo",
-    resources: [
-      { name: "LangChain Docs", url: "https://python.langchain.com", type: "Docs", isOfficial: true },
-      { name: "LangGraph (Multi-Agent)", url: "https://github.com/langchain-ai/langgraph", type: "Practice" },
-      { name: "CrewAI Framework", url: "https://github.com/joaomdmoura/crewAI", type: "Practice" },
-      { name: "AutoGen (Microsoft)", url: "https://microsoft.github.io/autogen/", type: "Practice", isOfficial: true },
-      { name: "Haystack RAG", url: "https://haystack.deepset.ai/", type: "Learn" }
-    ]
-  },
-  {
     title: "Data Science & BI",
     icon: "fa-chart-pie",
     color: "purple",
@@ -68,54 +66,7 @@ const categories: ResourceCategory[] = [
       { name: "Python Official", url: "https://www.python.org", type: "Docs", isOfficial: true },
       { name: "Kaggle Learn", url: "https://www.kaggle.com/learn", type: "Learn", isOfficial: true },
       { name: "Kaggle Datasets", url: "https://www.kaggle.com/datasets", type: "Practice" },
-      { name: "R Project Docs", url: "https://cran.r-project.org", type: "Docs" },
       { name: "Power BI Training", url: "https://learn.microsoft.com/power-bi/", type: "Learn", isOfficial: true }
-    ]
-  },
-  {
-    title: "ML & Deep Learning",
-    icon: "fa-microchip",
-    color: "cyan",
-    resources: [
-      { name: "TensorFlow Tutorials", url: "https://www.tensorflow.org/tutorials", type: "Learn", isOfficial: true },
-      { name: "PyTorch Tutorials", url: "https://pytorch.org/tutorials", type: "Learn", isOfficial: true },
-      { name: "Fast.ai Courses", url: "https://www.fast.ai/", type: "Learn" },
-      { name: "CS50 AI (Harvard)", url: "https://cs50.harvard.edu/ai", type: "Learn" },
-      { name: "Scikit-Learn Docs", url: "https://scikit-learn.org/", type: "Docs" }
-    ]
-  },
-  {
-    title: "Vector DBs & RAG",
-    icon: "fa-database",
-    color: "emerald",
-    resources: [
-      { name: "Chroma DB", url: "https://docs.trychroma.com", type: "Practice" },
-      { name: "Qdrant Vector Search", url: "https://qdrant.tech", type: "Practice" },
-      { name: "FAISS (Meta)", url: "https://github.com/facebookresearch/faiss", type: "Sandbox" },
-      { name: "Weaviate Cloud (Free)", url: "https://weaviate.io/", type: "Sandbox" }
-    ]
-  },
-  {
-    title: "Coding Environments",
-    icon: "fa-code",
-    color: "slate",
-    resources: [
-      { name: "Google Colab (Free GPU)", url: "https://colab.research.google.com", type: "Sandbox", isOfficial: true },
-      { name: "Kaggle Code", url: "https://www.kaggle.com/code", type: "Sandbox", isOfficial: true },
-      { name: "Replit Workspace", url: "https://replit.com", type: "Sandbox" },
-      { name: "VS Code (Offline)", url: "https://code.visualstudio.com/", type: "Sandbox" }
-    ]
-  },
-  {
-    title: "Cyber & Infrastructure",
-    icon: "fa-shield-halved",
-    color: "red",
-    resources: [
-      { name: "AWS Skill Builder", url: "https://skillbuilder.aws/", type: "Learn", isOfficial: true },
-      { name: "Azure MS Learn", url: "https://learn.microsoft.com/", type: "Learn", isOfficial: true },
-      { name: "OWASP Foundation", url: "https://owasp.org/", type: "Docs" },
-      { name: "TryHackMe Free", url: "https://tryhackme.com/", type: "Practice" },
-      { name: "Kubernetes Labs", url: "https://labs.play-with-k8s.com/", type: "Sandbox" }
     ]
   }
 ];
@@ -143,7 +94,7 @@ const FreeResources: React.FC = () => {
           <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true"></i>
           <input 
             type="text" 
-            placeholder="Search Murex, LLMs, Cloud..." 
+            placeholder="Search Murex, LLMs, SQL Areas..." 
             aria-label="Search resources"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -205,11 +156,10 @@ const FreeResources: React.FC = () => {
         <div className="flex-1 relative z-10">
           <h3 className="text-2xl font-black mb-3">Enterprise Concept Replication</h3>
           <p className="text-slate-400 leading-relaxed max-w-2xl font-medium">
-            Master specialized platforms like Murex or SAP by replicating their architectural logic with open tools. 
-            Use PostgreSQL for trade tables, QuantLib for pricing, and Python/Unix for batch orchestration. 
-            Real industry value lies in the lifecycle logic, not just the UI. 
+            90% of Murex support work is <strong>Unix, SQL, and Batch management</strong>. Master the trade lifecycle logic by building your own simulator with PostgreSQL and QuantLib. 
+            Real industry value lies in architecting the flow, not just clicking MX screens.
             <br/><br/>
-            <strong>90% of Murex support work</strong> is Unix, SQL, and Batch management.
+            Practice Area: Trade Booking, Market Data, Risk & PnL, EOD Reconciliation.
           </p>
         </div>
         <Link to="/explore" className="bg-blue-600 text-white hover:bg-blue-700 font-black py-4 px-10 rounded-2xl shadow-xl transition-all relative z-10 whitespace-nowrap">

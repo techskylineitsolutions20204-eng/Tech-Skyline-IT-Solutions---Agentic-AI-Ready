@@ -18,15 +18,21 @@ const labs: Lab[] = [
     duration: '150 mins', 
     diff: 'Advanced',
     img: 'https://images.unsplash.com/photo-1611974714851-eb6051612342?auto=format&fit=crop&q=80&w=800',
-    tasks: ['Simulate Trade Lifecycle (IRS/FX)', 'Configure QuantLib Pricing Engine', 'Design PostgreSQL Trade Schema', 'Execute Unix Batch Reconciliation']
+    tasks: [
+      'Simulate Trade Lifecycle (IRS/FX Swaps)', 
+      'Configure QuantLib Pricing Engine', 
+      'Design PostgreSQL Schema for Trade Tables', 
+      'Build Unix Shell Script for EOD Batch',
+      'Execute Risk Reconciliation (PnL Analysis)'
+    ]
   },
   { 
     title: 'Agentic Workflow Automation', 
-    env: 'LangGraph + AWS Bedrock', 
+    env: 'LangGraph + Gemini 3 Pro', 
     duration: '120 mins', 
     diff: 'Intermediate',
     img: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800',
-    tasks: ['Initialize LangGraph state', 'Configure AWS Bedrock LLM nodes', 'Implement tool-calling for DB search', 'Deploy as API']
+    tasks: ['Initialize LangGraph state', 'Configure Tool-Calling nodes', 'Implement Healing Agent logic', 'Deploy as Multi-Agent API']
   },
   { 
     title: 'Zero Trust Network Architect', 
@@ -34,7 +40,7 @@ const labs: Lab[] = [
     duration: '180 mins', 
     diff: 'Advanced',
     img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800',
-    tasks: ['Configure Azure AD Identity Protection', 'Setup K8s Network Policies', 'Implement mTLS with Istio', 'Audit logs with Sentinel']
+    tasks: ['Configure Entra ID IAM', 'Setup K8s Network Policies', 'Implement mTLS with Istio', 'Audit logs with Sentinel']
   },
   { 
     title: 'Full Stack Deployment CI/CD', 
@@ -51,15 +57,7 @@ const labs: Lab[] = [
     diff: 'Advanced',
     img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800',
     tasks: ['Load demand history', 'Configure IBP planning area', 'Run supply optimizer', 'Verify S/4HANA sync']
-  },
-  { 
-    title: 'AI Data Pipe Visualization', 
-    env: 'Power BI + Databricks', 
-    duration: '120 mins', 
-    diff: 'Intermediate',
-    img: 'https://images.unsplash.com/photo-1551288049-bbbda536339a?auto=format&fit=crop&q=80&w=800',
-    tasks: ['Setup Databricks cluster', 'Ingest Kaggle dataset', 'Perform Spark SQL cleaning', 'Create Power BI dashboard']
-  },
+  }
 ];
 
 const LiveLabs: React.FC = () => {
@@ -169,7 +167,7 @@ const LiveLabs: React.FC = () => {
         <div className="flex-1 flex overflow-hidden">
           {/* Sidebar: Tasks */}
           <aside className="w-80 bg-white border-r border-slate-200 p-6 overflow-y-auto">
-            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Lab Roadmap</h3>
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Lab Modules</h3>
             <div className="space-y-4">
               {selectedLab.tasks.map((task, idx) => (
                 <div 
@@ -177,7 +175,7 @@ const LiveLabs: React.FC = () => {
                   onClick={() => setCompletedTasks(prev => prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx])}
                   className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                     completedTasks.includes(idx) 
-                      ? 'bg-emerald-50 border-emerald-500' 
+                      ? 'bg-emerald-50 border-emerald-500 shadow-lg shadow-emerald-500/10' 
                       : 'bg-white border-slate-100 hover:border-blue-200'
                   }`}
                 >
@@ -196,7 +194,7 @@ const LiveLabs: React.FC = () => {
             </div>
 
             <div className="mt-8 p-6 bg-slate-50 rounded-2xl border border-slate-200">
-              <p className="text-xs font-bold text-slate-500 mb-2">Completion Status</p>
+              <p className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Progress</p>
               <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
                 <div 
                   className="bg-emerald-500 h-full transition-all duration-500" 
@@ -204,7 +202,7 @@ const LiveLabs: React.FC = () => {
                 ></div>
               </div>
               <p className="text-right text-[10px] font-black text-slate-400 mt-1 uppercase">
-                {completedTasks.length} / {selectedLab.tasks.length} Modules
+                {completedTasks.length} / {selectedLab.tasks.length} Done
               </p>
             </div>
           </aside>
@@ -216,7 +214,7 @@ const LiveLabs: React.FC = () => {
                 <button 
                   key={tab}
                   onClick={() => setActiveTab(tab as any)}
-                  className={`px-8 py-3 text-xs font-bold uppercase tracking-widest transition-all ${
+                  className={`px-8 py-3 text-[10px] font-black uppercase tracking-widest transition-all ${
                     activeTab === tab ? 'text-white border-b-2 border-blue-500 bg-white/5' : 'text-slate-500 hover:text-slate-300'
                   }`}
                 >
@@ -225,14 +223,14 @@ const LiveLabs: React.FC = () => {
               ))}
             </div>
 
-            <div className="flex-1 p-8 font-mono text-sm overflow-y-auto">
+            <div className="flex-1 p-8 font-mono text-sm overflow-y-auto custom-scrollbar">
               {activeTab === 'terminal' && (
                 <div className="space-y-2 text-slate-300">
                   {terminalLines.map((line, i) => (
-                    <div key={i} className={line.startsWith('skyline') ? 'text-emerald-400' : ''}>{line}</div>
+                    <div key={i} className={line.startsWith('skyline') ? 'text-emerald-400 font-bold' : ''}>{line}</div>
                   ))}
                   <div className="flex gap-2">
-                    <span className="text-emerald-400">skyline@lab:~$</span>
+                    <span className="text-emerald-400 font-bold">skyline@lab:~$</span>
                     <input 
                       autoFocus
                       type="text"
@@ -241,11 +239,11 @@ const LiveLabs: React.FC = () => {
                         if (e.key === 'Enter') {
                           const val = (e.target as HTMLInputElement).value;
                           (e.target as HTMLInputElement).value = '';
-                          if (val === 'ls') runCommand(val, 'src/  configs/  scripts/  requirements.txt');
-                          else if (val.includes('deploy')) runCommand(val, '[INFO] Initiating deployment sequence... 100% SUCCESS');
+                          if (val === 'ls') runCommand(val, 'trade_sim.py  static_data.sql  batch_job.sh  requirements.txt');
+                          else if (val.includes('python')) runCommand(val, '[INFO] QuantLib Engine calibrated. Pricing Swap MX_991... OK');
+                          else if (val.includes('sql')) runCommand(val, 'SELECT count(*) FROM mx_trades WHERE status = \'PENDING\'; -- 420 rows.');
                           else if (val.includes('clear')) setTerminalLines([]);
-                          else if (val.includes('sql')) runCommand(val, 'SELECT count(*) FROM trades; -- Result: 1,420 trades found.');
-                          else runCommand(val, `Command not recognized: ${val}. Try 'deploy', 'ls', or 'sql'`);
+                          else runCommand(val, `Command not recognized: ${val}. Try 'ls', 'python trade_sim.py', or 'sql'`);
                         }
                       }}
                     />
@@ -254,31 +252,38 @@ const LiveLabs: React.FC = () => {
               )}
 
               {activeTab === 'docs' && (
-                <div className="prose prose-invert max-w-none text-slate-400 p-4">
-                  <h3 className="text-white">Murex Replication Lab Guide</h3>
-                  <p>In this lab, you replicate the core functionality of Murex using open tools:</p>
-                  <ul className="space-y-2 list-disc pl-5">
-                    <li><strong>QuantLib:</strong> Used as the pricing engine for IRS and FX swaps.</li>
-                    <li><strong>PostgreSQL:</strong> Replicates MX database tables for Trade Booking and Static Data.</li>
-                    <li><strong>Unix:</strong> Master 'grep', 'awk', and shell scripts for EOD (End of Day) processing.</li>
-                  </ul>
-                  <p className="mt-4 text-xs italic">"Real industry value lies in the trade lifecycle logic, not just the UI."</p>
+                <div className="prose prose-invert max-w-none text-slate-400 p-4 font-sans">
+                  <h3 className="text-white font-black text-2xl mb-4">Murex Financial Replication Guide</h3>
+                  <p className="mb-4">Master the core functionality of Murex MX.3 using zero-cost enterprise-grade open source tools:</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div className="bg-white/5 p-6 rounded-3xl border border-white/10">
+                      <h4 className="text-blue-400 font-black text-xs uppercase mb-2">Trade Lifecycle</h4>
+                      <p className="text-xs">Manage trade states from 'New' to 'Matured'. Use the Trade Tables in PostgreSQL for state persistence.</p>
+                    </div>
+                    <div className="bg-white/5 p-6 rounded-3xl border border-white/10">
+                      <h4 className="text-amber-400 font-black text-xs uppercase mb-2">QuantLib Pricing</h4>
+                      <p className="text-xs">Replicate Front Office pricing for Interest Rate Swaps (IRS) and FX options using Python bindings.</p>
+                    </div>
+                  </div>
+                  <p className="text-xs italic border-l-2 border-blue-500 pl-4 py-2 bg-blue-500/5">
+                    "Real industry value in capital markets lies in the architectural trade lifecycle logic, not just vendor-specific UI buttons."
+                  </p>
                 </div>
               )}
 
               {activeTab === 'tutor' && (
-                <div className="space-y-6 max-w-2xl mx-auto">
+                <div className="space-y-6 max-w-2xl mx-auto font-sans">
                   <div className="flex gap-4 items-start bg-blue-600/10 p-6 rounded-3xl border border-blue-500/20 shadow-xl shadow-blue-500/5">
                     <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center flex-shrink-0">
                       <i className="fas fa-chalkboard-user"></i>
                     </div>
                     <div className="space-y-3">
-                      <p className="text-blue-200 text-sm leading-relaxed">
-                        I'm your **Industry Mentor**. It looks like you're working on <strong>{selectedLab.tasks[completedTasks.length] || 'final module'}</strong>. 
+                      <p className="text-blue-200 text-sm leading-relaxed font-medium">
+                        I'm your **Murex Industry Mentor**. It looks like you're working on <strong>{selectedLab.tasks[completedTasks.length] || 'final assessment'}</strong>. 
                       </p>
-                      <p className="text-white text-xs font-bold uppercase tracking-widest">Architectural Hint:</p>
+                      <p className="text-white text-[10px] font-black uppercase tracking-widest">Architectural Insight:</p>
                       <p className="text-slate-400 text-xs italic">
-                        "For Trade Reconciliation, remember to check the 'MX_ID' mapping in your PostgreSQL schema. Use 'awk' to filter the log files by timestamp for the EOD report."
+                        "When running the EOD reconciliation, remember to check the 'MX_ID' mapping in your PostgreSQL schema. Use 'awk' to filter the log files by timestamp for the PnL report."
                       </p>
                     </div>
                   </div>
@@ -287,17 +292,17 @@ const LiveLabs: React.FC = () => {
                     <button 
                       onClick={handleGenerateQuiz}
                       disabled={quizLoading}
-                      className="w-full py-4 bg-blue-600/10 hover:bg-blue-600 border border-blue-500/30 text-blue-400 hover:text-white text-xs font-black uppercase rounded-2xl transition-all flex items-center justify-center gap-3 group"
+                      className="w-full py-4 bg-blue-600/10 hover:bg-blue-600 border border-blue-500/30 text-blue-400 hover:text-white text-[10px] font-black uppercase rounded-2xl transition-all flex items-center justify-center gap-3 group tracking-widest"
                     >
                       {quizLoading ? (
                         <>
                           <i className="fas fa-atom animate-spin"></i>
-                          Generating Assessment...
+                          Generating Quiz...
                         </>
                       ) : (
                         <>
                           <i className="fas fa-vial group-hover:rotate-12 transition-transform"></i>
-                          Generate Quiz for this module
+                          Knowledge Assessment
                         </>
                       )}
                     </button>
@@ -316,13 +321,13 @@ const LiveLabs: React.FC = () => {
                           <textarea 
                             value={quizAnswer}
                             onChange={(e) => setQuizAnswer(e.target.value)}
-                            placeholder="Type your explanation here..."
-                            className="w-full bg-slate-800 border border-white/5 rounded-2xl p-4 text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all h-32"
+                            placeholder="Provide your professional explanation..."
+                            className="w-full bg-slate-800 border border-white/5 rounded-2xl p-4 text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all h-32 custom-scrollbar"
                           />
                           <button 
                             onClick={handleSubmitAnswer}
                             disabled={evaluating || !quizAnswer.trim()}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest flex items-center justify-center gap-2"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"
                           >
                             {evaluating ? (
                               <>
@@ -342,7 +347,7 @@ const LiveLabs: React.FC = () => {
                           <div className={`p-6 rounded-2xl border ${quizResult.score >= 70 ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-rose-500/10 border-rose-500/20'}`}>
                             <div className="flex items-center justify-between mb-4">
                               <span className={`text-[10px] font-black uppercase tracking-widest ${quizResult.score >= 70 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                Result
+                                Score
                               </span>
                               <span className={`text-2xl font-black ${quizResult.score >= 70 ? 'text-emerald-400' : 'text-rose-400'}`}>
                                 {quizResult.score}%
@@ -354,9 +359,9 @@ const LiveLabs: React.FC = () => {
                           </div>
                           <button 
                             onClick={handleGenerateQuiz}
-                            className="w-full py-3 text-xs font-black text-blue-400 border border-blue-400/20 rounded-xl hover:bg-blue-400/10 transition-all uppercase"
+                            className="w-full py-3 text-[10px] font-black text-blue-400 border border-blue-400/20 rounded-xl hover:bg-blue-400/10 transition-all uppercase tracking-widest"
                           >
-                            Try Another Question
+                            New Challenge
                           </button>
                         </div>
                       )}
@@ -385,8 +390,8 @@ const LiveLabs: React.FC = () => {
               <i className="fas fa-cloud-arrow-up absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl text-blue-500"></i>
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-black text-white">Provisioning Lab Environment</h2>
-              <p className="text-slate-400">Orchestrating production stack for {selectedLab?.title}...</p>
+              <h2 className="text-2xl font-black text-white uppercase tracking-tight">Provisioning Lab</h2>
+              <p className="text-slate-400 font-medium">Orchestrating production stack for {selectedLab?.title}...</p>
             </div>
             <div className="w-full bg-white/5 rounded-full h-3 overflow-hidden border border-white/10">
               <div 
@@ -394,32 +399,19 @@ const LiveLabs: React.FC = () => {
                 style={{ width: `${provisioningStep}%` }}
               ></div>
             </div>
-            <div className="grid grid-cols-2 gap-4 text-left">
-              {[
-                { label: 'Security Context', status: provisioningStep > 20 ? 'OK' : '...' },
-                { label: 'Cloud Storage', status: provisioningStep > 40 ? 'OK' : '...' },
-                { label: 'Worker Nodes', status: provisioningStep > 60 ? 'OK' : '...' },
-                { label: 'Binary Injector', status: provisioningStep > 80 ? 'OK' : '...' }
-              ].map((s, i) => (
-                <div key={i} className="flex items-center justify-between bg-white/5 p-3 rounded-xl border border-white/5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{s.label}</span>
-                  <span className={`text-[10px] font-black ${s.status === 'OK' ? 'text-emerald-500' : 'text-slate-600'}`}>{s.status}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       )}
 
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
         <div>
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-2">Live Cloud Labs</h1>
-          <p className="text-slate-500">Practice on production-grade environments. 100% setup-free practice.</p>
+          <h1 className="text-4xl font-black text-slate-900 mb-2 uppercase tracking-tighter">Live Cloud Labs</h1>
+          <p className="text-slate-500 font-medium">Practice on production-grade environments with real industry toolchains.</p>
         </div>
         <div className="flex gap-2">
           <div className="relative">
             <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" placeholder="Search labs..." className="pl-12 pr-6 py-3 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white shadow-sm w-full md:w-64" />
+            <input type="text" placeholder="Search labs..." className="pl-12 pr-6 py-3 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white shadow-sm w-full md:w-64 font-bold text-sm" />
           </div>
         </div>
       </div>
@@ -431,7 +423,7 @@ const LiveLabs: React.FC = () => {
               <img src={lab.img} alt={lab.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
               <div className="absolute top-6 right-6">
-                <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl ${
+                <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl border border-white/20 ${
                   lab.diff === 'Basic' ? 'bg-emerald-500 text-white' : 
                   lab.diff === 'Intermediate' ? 'bg-amber-500 text-white' : 'bg-rose-500 text-white'
                 }`}>
@@ -447,23 +439,23 @@ const LiveLabs: React.FC = () => {
               </div>
             </div>
             <div className="p-8 flex-1 flex flex-col">
-              <div className="flex items-center justify-between text-slate-500 text-xs font-bold mb-8">
+              <div className="flex items-center justify-between text-slate-500 text-[10px] font-black uppercase tracking-widest mb-8">
                 <span className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
                   <i className="far fa-clock text-blue-500"></i> {lab.duration}
                 </span>
                 <span className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-                  <i className="fas fa-users text-blue-500"></i> Active Labs
+                  <i className="fas fa-users text-blue-500"></i> Cloud Ready
                 </span>
               </div>
               
               <div className="space-y-2 mb-8 flex-1">
                 {lab.tasks.slice(0, 3).map((task, tIdx) => (
-                  <div key={tIdx} className="flex items-center gap-3 text-xs text-slate-600 font-medium">
+                  <div key={tIdx} className="flex items-center gap-3 text-xs text-slate-600 font-bold">
                     <i className="fas fa-check-circle text-emerald-500/40"></i>
                     {task}
                   </div>
                 ))}
-                {lab.tasks.length > 3 && <div className="text-[10px] text-slate-400 font-black uppercase tracking-widest pl-6">+ {lab.tasks.length - 3} more modules</div>}
+                {lab.tasks.length > 3 && <div className="text-[10px] text-slate-400 font-black uppercase tracking-widest pl-6">+ {lab.tasks.length - 3} More Modules</div>}
               </div>
               
               <button 

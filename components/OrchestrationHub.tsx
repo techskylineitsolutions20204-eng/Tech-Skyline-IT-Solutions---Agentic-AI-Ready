@@ -59,21 +59,6 @@ const orchestrationData: HubCategory[] = [
       { title: "Software testing", description: "Traditional QA automation enhanced with AI-powered capabilities", icon: "fa-code-compare", tag: "QA" },
       { title: "Test automation", description: "Scripted test execution for regression and functional testing", icon: "fa-terminal", tag: "Standard" }
     ]
-  },
-  {
-    sectionTitle: "Ways to Automate",
-    sectionDesc: "Step-by-step frameworks and specialized ecosystem integrations.",
-    colorTheme: "indigo",
-    items: [
-      { title: "SAP automation", description: "Automate SAP workflows without changing core system configuration", icon: "fa-server", tag: "ERP" },
-      { title: "Web automation", description: "Control browsers, fill forms, and extract web data automatically", icon: "fa-globe", tag: "Web" },
-      { title: "Desktop automation", description: "Automate Windows, Mac, and Linux desktop application interactions", icon: "fa-desktop", tag: "OS" },
-      { title: "Email automation", description: "Auto-sort, process, and respond to emails using AI understanding", icon: "fa-envelope-open-text", tag: "Communication" },
-      { title: "API automation", description: "Integrate systems by automating REST, SOAP, and GraphQL API calls", icon: "fa-link", tag: "Dev" },
-      { title: "UI automation", description: "Interact with any app interface using clicks, keystrokes, and OCR", icon: "fa-mouse-pointer", tag: "UI" },
-      { title: "Document automation", description: "Process invoices, contracts, and forms with structured automation", icon: "fa-file-lines", tag: "Docs" },
-      { title: "Excel automation", description: "Automate Excel formulas, macros, and data manipulation tasks", icon: "fa-file-excel", tag: "Office" }
-    ]
   }
 ];
 
@@ -108,14 +93,14 @@ const OrchestrationHub: React.FC = () => {
       {/* Featured Agent Suite */}
       <section className="space-y-8">
         <div className="text-center">
-          <h2 className="text-3xl font-black text-slate-900 mb-2">Specialized Agent Suite</h2>
-          <p className="text-slate-500">Autonomous capabilities tailored for the enterprise lifecycle.</p>
+          <h2 className="text-3xl font-black text-slate-900 mb-2 uppercase tracking-tight">Specialized Agent Suite</h2>
+          <p className="text-slate-500 font-medium">Autonomous capabilities tailored for the enterprise lifecycle.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { 
               title: "Agent Builder", 
-              desc: "Build, test, and launch agents from within the familiar Studio environment. Use prebuilt agents from the Catalog.", 
+              desc: "Build, test, and launch agents from within the familiar Studio environment. Start from scratch or use prebuilt templates.", 
               icon: "fa-hammer", 
               color: "blue",
               detail: "Discover Agent Builder"
@@ -125,14 +110,14 @@ const OrchestrationHub: React.FC = () => {
               desc: "Agentic orchestration to manage Skyline Agents, third-party agents, robots, and people across complex workflows.", 
               icon: "fa-wand-sparkles", 
               color: "indigo",
-              detail: "Try Maestro"
+              detail: "Explore Maestro"
             },
             { 
               title: "Healing Agent", 
               desc: "Ensure your automations remain resilient despite application changes. Includes intelligent self-healing and fixing.", 
               icon: "fa-heart-pulse", 
               color: "rose",
-              detail: "Enable Self-Healing"
+              detail: "Self-Healing UI"
             },
             { 
               title: "Autopilot™", 
@@ -147,8 +132,8 @@ const OrchestrationHub: React.FC = () => {
                 <i className={`fas ${item.icon}`}></i>
               </div>
               <h3 className="text-xl font-black mb-3 text-slate-900">{item.title}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed flex-1 mb-6">{item.desc}</p>
-              <button className={`text-xs font-black text-${item.color}-600 uppercase tracking-widest flex items-center gap-2 group/btn`}>
+              <p className="text-slate-500 text-sm leading-relaxed flex-1 mb-6 font-medium">{item.desc}</p>
+              <button className={`text-[10px] font-black text-${item.color}-600 uppercase tracking-widest flex items-center gap-2 group/btn`}>
                 {item.detail} <i className="fas fa-arrow-right-long transition-transform group-hover/btn:translate-x-1"></i>
               </button>
             </div>
@@ -156,61 +141,20 @@ const OrchestrationHub: React.FC = () => {
         </div>
       </section>
 
-      {/* Learning & Tutorials Row */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-black text-slate-900">Developer Tutorials</h2>
-            <button className="text-xs font-black text-blue-600 uppercase tracking-widest">View Catalog</button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              { title: "First AI Agent from Scratch", mentor: "Nisarg Kadam", role: "Skyline MVP 2025", type: "Watch Tutorial" },
-              { title: "Browse Agent Catalog", mentor: "Marketplace Team", role: "Official Templates", type: "Get Catalog" },
-              { title: "Set up Autopilot for Everyone", mentor: "Lahiru Fernando", role: "Skyline MVP 2025", type: "Watch Tutorial" },
-              { title: "Try Autopilot Automations", mentor: "Community Experts", role: "Role-Tailored", type: "Get Collection" }
-            ].map((t, i) => (
-              <div key={i} className="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-4 hover:border-blue-200 transition-all cursor-pointer">
-                <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
-                  <i className="fas fa-video"></i>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-black text-slate-900 text-sm leading-tight mb-1">{t.title}</h4>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{t.mentor} • {t.role}</p>
-                </div>
-                <i className="fas fa-chevron-right text-slate-200"></i>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white flex flex-col justify-between">
-          <div>
-            <span className="text-[10px] font-black uppercase text-blue-400 tracking-widest mb-4 block">Academy Hub</span>
-            <h3 className="text-2xl font-black mb-4">Enroll in the agentic discovery framework</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              Learn to apply our framework to uncover opportunities for agentic automation in your organization. Master fundamentals of autonomous system design.
-            </p>
-          </div>
-          <button className="mt-8 bg-blue-600 text-white font-black py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-all">
-            Enroll Now
-          </button>
-        </div>
-      </section>
-
       {/* Community Section */}
       <section className="bg-white rounded-[3.5rem] p-12 border border-slate-100 shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {[
-          { title: "Skyline Community", desc: "Connect with experts and peers on the latest trends.", icon: "fa-users", action: "Join Community" },
-          { title: "Skyline Forum", desc: "Get support from peers and learn about latest releases.", icon: "fa-comments", action: "Sign up" },
-          { title: "Community Newsletter", desc: "Latest on automation development to your inbox.", icon: "fa-envelope-open-text", action: "Subscribe" },
-          { title: "Skyline Documentation", desc: "Explore guides to support your journey.", icon: "fa-book", action: "Search Docs" }
+          { title: "Skyline Community", desc: "Connect with experts and peers on the latest trends in agentic automation.", icon: "fa-users", action: "Join Community" },
+          { title: "Skyline Forum", desc: "Get support from peers and learn about latest product releases.", icon: "fa-comments", action: "Sign up" },
+          { title: "Community Newsletter", desc: "Get the latest on automation development straight to your inbox.", icon: "fa-envelope-open-text", action: "Subscribe" },
+          { title: "Skyline Documentation", desc: "Explore product documentation and guides to support your journey.", icon: "fa-book", action: "Search Docs" }
         ].map((c, i) => (
           <div key={i} className="space-y-4">
             <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-900 flex items-center justify-center">
               <i className={`fas ${c.icon}`}></i>
             </div>
             <h4 className="font-black text-slate-900">{c.title}</h4>
-            <p className="text-xs text-slate-500 leading-relaxed">{c.desc}</p>
+            <p className="text-xs text-slate-500 leading-relaxed font-medium">{c.desc}</p>
             <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-2 group">
               {c.action} <i className="fas fa-arrow-right-long transition-transform group-hover:translate-x-1"></i>
             </button>
@@ -226,7 +170,7 @@ const OrchestrationHub: React.FC = () => {
         <div className="relative z-10 space-y-6">
           <h2 className="text-4xl font-black">Be the first to try our new agentic capabilities</h2>
           <p className="text-lg text-blue-100 max-w-xl mx-auto opacity-80 font-medium">
-            Become a Skyline Insider to participate in the new previews of our agentic orchestration platform.
+            Become a Skyline Insider to participate in the new previews of our agentic orchestration platform and multi-agent frameworks.
           </p>
           <button className="bg-slate-900 text-white font-black py-5 px-14 rounded-2xl shadow-xl hover:bg-slate-800 transition-all text-lg">
             Become an Insider
@@ -237,7 +181,7 @@ const OrchestrationHub: React.FC = () => {
   );
 
   const renderConcepts = () => (
-    <div className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-24">
       {orchestrationData.map((category, catIdx) => {
         const filteredItems = category.items.filter(item => 
           item.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -255,7 +199,7 @@ const OrchestrationHub: React.FC = () => {
                   <span className={`w-3 h-8 bg-${category.colorTheme}-600 rounded-full`}></span>
                   {category.sectionTitle}
                 </h2>
-                <p className="text-slate-500 mt-2">{category.sectionDesc}</p>
+                <p className="text-slate-500 mt-2 font-medium">{category.sectionDesc}</p>
               </div>
             </div>
 
@@ -279,12 +223,12 @@ const OrchestrationHub: React.FC = () => {
                   <h3 className="text-lg font-black text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-slate-500 text-sm leading-relaxed flex-1">
+                  <p className="text-slate-500 text-sm leading-relaxed flex-1 font-medium">
                     {item.description}
                   </p>
                   
-                  <div className="mt-6 pt-6 border-t border-slate-50 flex items-center justify-between text-xs font-bold text-slate-400 group-hover:text-blue-500 transition-colors">
-                    <span>EXPLORE ARCHITECTURE</span>
+                  <div className="mt-6 pt-6 border-t border-slate-50 flex items-center justify-between text-[10px] font-black text-slate-400 group-hover:text-blue-500 transition-colors uppercase tracking-widest">
+                    <span>Explore Architecture</span>
                     <i className="fas fa-arrow-right-long opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all"></i>
                   </div>
                 </div>
@@ -308,7 +252,7 @@ const OrchestrationHub: React.FC = () => {
         <div className="flex bg-white p-1.5 rounded-3xl shadow-inner border border-slate-100">
           <button 
             onClick={() => setActiveTab('agentpath')}
-            className={`px-10 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${
+            className={`px-10 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
               activeTab === 'agentpath' ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/20' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
             }`}
           >
@@ -316,7 +260,7 @@ const OrchestrationHub: React.FC = () => {
           </button>
           <button 
             onClick={() => setActiveTab('concepts')}
-            className={`px-10 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${
+            className={`px-10 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
               activeTab === 'concepts' ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/20' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
             }`}
           >
