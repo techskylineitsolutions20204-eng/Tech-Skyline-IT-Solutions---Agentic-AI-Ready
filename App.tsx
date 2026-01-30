@@ -9,6 +9,7 @@ import VideoGenerator from './components/VideoGenerator';
 import AIAssistant from './components/AIAssistant';
 import FreeResources from './components/FreeResources';
 import AgenticTutorStack from './components/AgenticTutorStack';
+import OrchestrationHub from './components/OrchestrationHub';
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -17,6 +18,7 @@ const App: React.FC = () => {
   const navItems = [
     { path: '/', label: 'Dashboard', icon: 'fa-house' },
     { path: '/explore', label: 'Roadmap Architect', icon: 'fa-map' },
+    { path: '/automation-hub', label: 'Automation Hub', icon: 'fa-gears' },
     { path: '/tutor-stack', label: 'Tutor Blueprint', icon: 'fa-microchip' },
     { path: '/labs', label: 'Live Sandbox', icon: 'fa-flask-vial' },
     { path: '/resources', label: 'Resource Hub', icon: 'fa-book-open' },
@@ -90,6 +92,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/explore" element={<ExploreRoadmaps />} />
+            <Route path="/automation-hub" element={<OrchestrationHub />} />
             <Route path="/tutor-stack" element={<AgenticTutorStack />} />
             <Route path="/labs" element={<LiveLabs />} />
             <Route path="/resources" element={<FreeResources />} />

@@ -80,6 +80,69 @@ export const generateRoadmap = async (domain: TechDomain, role: string): Promise
   return JSON.parse(response.text || '{}') as LearningRoadmap;
 };
 
+export const generateQuiz = async (labTitle: string, currentTask: string): Promise<{ question: string; context: string }> => {
+  const ai = getGeminiClient();
+  const prompt = `You are the Evaluator Agent for Tech Skyline IT Solutions. 
+  The student is currently working on a Lab titled "${labTitle}", specifically the module: "${currentTask}".
+  Generate a challenging, open-ended technical question that tests deep understanding of this specific module.
+  
+  Return JSON:
+  {
+    "question": "The technical question",
+    "context": "Short hint or context for the question"
+  }`;
+
+  const response = await ai.models.generateContent({
+    model: "gemini-3-flash-preview",
+    contents: prompt,
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          question: { type: Type.STRING },
+          context: { type: Type.STRING }
+        },
+        required: ["question", "context"]
+      }
+    }
+  });
+
+  return JSON.parse(response.text || '{"question": "What is the primary goal of this module?", "context": "Lab module check"}');
+};
+
+export const evaluateQuiz = async (question: string, answer: string): Promise<{ score: number; feedback: string }> => {
+  const ai = getGeminiClient();
+  const prompt = `You are the Senior Industry Evaluator. 
+  Question: "${question}"
+  Student Answer: "${answer}"
+  
+  Evaluate the answer for technical accuracy, professional terminology, and completeness.
+  Return JSON:
+  {
+    "score": number (0-100),
+    "feedback": "Constructive feedback and correct explanation if needed"
+  }`;
+
+  const response = await ai.models.generateContent({
+    model: "gemini-3-flash-preview",
+    contents: prompt,
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          score: { type: Type.NUMBER },
+          feedback: { type: Type.STRING }
+        },
+        required: ["score", "feedback"]
+      }
+    }
+  });
+
+  return JSON.parse(response.text || '{"score": 0, "feedback": "Evaluation failed. Please try again."}');
+};
+
 export const createAIChat = (systemInstruction: string): Chat => {
   const ai = getGeminiClient();
   return ai.chats.create({

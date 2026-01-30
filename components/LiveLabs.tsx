@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { generateQuiz, evaluateQuiz } from '../services/geminiService';
 
 interface Lab {
   title: string;
@@ -69,12 +70,21 @@ const LiveLabs: React.FC = () => {
   const [terminalLines, setTerminalLines] = useState<string[]>([]);
   const [completedTasks, setCompletedTasks] = useState<number[]>([]);
 
+  // Quiz State
+  const [quizLoading, setQuizLoading] = useState(false);
+  const [activeQuiz, setActiveQuiz] = useState<{ question: string; context: string } | null>(null);
+  const [quizAnswer, setQuizAnswer] = useState('');
+  const [evaluating, setEvaluating] = useState(false);
+  const [quizResult, setQuizResult] = useState<{ score: number; feedback: string } | null>(null);
+
   const handleStartLab = (lab: Lab) => {
     setSelectedLab(lab);
     setIsProvisioning(true);
     setProvisioningStep(0);
     setTerminalLines(['# Initializing virtual environment...', `# Targeted stack: ${lab.env}`]);
     setCompletedTasks([]);
+    setActiveQuiz(null);
+    setQuizResult(null);
   };
 
   useEffect(() => {
@@ -93,13 +103,45 @@ const LiveLabs: React.FC = () => {
     }
   }, [isProvisioning]);
 
+  const handleGenerateQuiz = async () => {
+    if (!selectedLab) return;
+    setQuizLoading(true);
+    setQuizResult(null);
+    setQuizAnswer('');
+    
+    const currentTask = selectedLab.tasks[completedTasks.length] || selectedLab.tasks[selectedLab.tasks.length - 1];
+    
+    try {
+      const quiz = await generateQuiz(selectedLab.title, currentTask);
+      setActiveQuiz(quiz);
+    } catch (err) {
+      console.error('Failed to generate quiz', err);
+      alert('Tutor is currently offline. Please try again.');
+    } finally {
+      setQuizLoading(false);
+    }
+  };
+
+  const handleSubmitAnswer = async () => {
+    if (!activeQuiz || !quizAnswer.trim()) return;
+    setEvaluating(true);
+    try {
+      const result = await evaluateQuiz(activeQuiz.question, quizAnswer);
+      setQuizResult(result);
+    } catch (err) {
+      console.error('Failed to evaluate quiz', err);
+    } finally {
+      setEvaluating(false);
+    }
+  };
+
   const runCommand = (cmd: string, output: string) => {
     setTerminalLines(prev => [...prev, `skyline@lab:~$ ${cmd}`, output]);
   };
 
   if (selectedLab && !isProvisioning) {
     return (
-      <div className="max-w-7xl mx-auto h-[calc(100vh-12rem)] flex flex-col animate-in fade-in duration-500">
+      <div className="max-w-7xl mx-auto h-[calc(100vh-12rem)] flex flex-col animate-in fade-in duration-500 relative">
         {/* Lab Header */}
         <div className="bg-slate-900 p-6 flex items-center justify-between border-b border-white/5 rounded-t-[2.5rem]">
           <div className="flex items-center gap-4">
@@ -223,8 +265,8 @@ const LiveLabs: React.FC = () => {
               )}
 
               {activeTab === 'tutor' && (
-                <div className="space-y-6">
-                  <div className="flex gap-4 items-start bg-blue-600/10 p-6 rounded-3xl border border-blue-500/20">
+                <div className="space-y-6 max-w-2xl mx-auto">
+                  <div className="flex gap-4 items-start bg-blue-600/10 p-6 rounded-3xl border border-blue-500/20 shadow-xl shadow-blue-500/5">
                     <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center flex-shrink-0">
                       <i className="fas fa-chalkboard-user"></i>
                     </div>
@@ -238,9 +280,86 @@ const LiveLabs: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <button className="w-full py-4 border border-blue-500/30 text-blue-400 text-xs font-black uppercase rounded-2xl hover:bg-blue-600/10 transition-all">
-                    Generate Quiz for this module
-                  </button>
+
+                  {!activeQuiz ? (
+                    <button 
+                      onClick={handleGenerateQuiz}
+                      disabled={quizLoading}
+                      className="w-full py-4 bg-blue-600/10 hover:bg-blue-600 border border-blue-500/30 text-blue-400 hover:text-white text-xs font-black uppercase rounded-2xl transition-all flex items-center justify-center gap-3 group"
+                    >
+                      {quizLoading ? (
+                        <>
+                          <i className="fas fa-atom animate-spin"></i>
+                          Generating Assessment...
+                        </>
+                      ) : (
+                        <>
+                          <i className="fas fa-vial group-hover:rotate-12 transition-transform"></i>
+                          Generate Quiz for this module
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <div className="bg-slate-900 border border-white/10 rounded-[2.5rem] p-8 space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+                      <div className="flex justify-between items-start">
+                        <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Challenge: {activeQuiz.context}</span>
+                        <button onClick={() => setActiveQuiz(null)} className="text-white/20 hover:text-white">
+                          <i className="fas fa-times"></i>
+                        </button>
+                      </div>
+                      <h4 className="text-white text-lg font-bold leading-tight">{activeQuiz.question}</h4>
+                      
+                      {!quizResult ? (
+                        <div className="space-y-4">
+                          <textarea 
+                            value={quizAnswer}
+                            onChange={(e) => setQuizAnswer(e.target.value)}
+                            placeholder="Type your explanation here..."
+                            className="w-full bg-slate-800 border border-white/5 rounded-2xl p-4 text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all h-32"
+                          />
+                          <button 
+                            onClick={handleSubmitAnswer}
+                            disabled={evaluating || !quizAnswer.trim()}
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest flex items-center justify-center gap-2"
+                          >
+                            {evaluating ? (
+                              <>
+                                <i className="fas fa-microchip animate-spin"></i>
+                                Evaluating...
+                              </>
+                            ) : (
+                              <>
+                                <i className="fas fa-paper-plane"></i>
+                                Submit Answer
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="space-y-6 animate-in fade-in duration-500">
+                          <div className={`p-6 rounded-2xl border ${quizResult.score >= 70 ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-rose-500/10 border-rose-500/20'}`}>
+                            <div className="flex items-center justify-between mb-4">
+                              <span className={`text-[10px] font-black uppercase tracking-widest ${quizResult.score >= 70 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                Result
+                              </span>
+                              <span className={`text-2xl font-black ${quizResult.score >= 70 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                {quizResult.score}%
+                              </span>
+                            </div>
+                            <p className="text-slate-300 text-sm leading-relaxed italic">
+                              "{quizResult.feedback}"
+                            </p>
+                          </div>
+                          <button 
+                            onClick={handleGenerateQuiz}
+                            className="w-full py-3 text-xs font-black text-blue-400 border border-blue-400/20 rounded-xl hover:bg-blue-400/10 transition-all uppercase"
+                          >
+                            Try Another Question
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
