@@ -1,0 +1,7 @@
+{
+  "name": "Tech Skyline IT Solutions - Agentic AI Ready",
+  "description": "An advanced Agentic AI Learning Architect platform delivering job-ready learning pathways, live labs, and AI-powered mentorship for workforce transformation.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
