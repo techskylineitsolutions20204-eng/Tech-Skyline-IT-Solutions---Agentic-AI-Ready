@@ -11,10 +11,12 @@ export enum TechDomain {
 
 export interface RoadmapStep {
   title: string;
-  level: 'Basic' | 'Intermediate' | 'Advanced';
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
   description: string;
   tools: string[];
   labIdea: string;
+  assessmentStrategy: string;
+  skillOutcomes: string[];
   certifications: string[];
 }
 
@@ -24,6 +26,7 @@ export interface LearningRoadmap {
   overview: string;
   steps: RoadmapStep[];
   enterpriseUseCases: string[];
+  careerAlignment: string;
 }
 
 export interface ChatMessage {

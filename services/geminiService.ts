@@ -10,10 +10,36 @@ export const getGeminiClient = () => {
 
 export const generateRoadmap = async (domain: TechDomain, role: string): Promise<LearningRoadmap> => {
   const ai = getGeminiClient();
-  const prompt = `Act as an Advanced Agentic AI Learning Architect for Tech Skyline IT Solutions. 
-  Design a complete, job-ready learning roadmap for the role of "${role}" in the domain of "${domain}". 
-  Include exactly 6 steps ranging from Basic to Advanced. 
-  Focus on hands-on labs and real-world enterprise use cases.`;
+  const prompt = `Act as an Advanced Agentic AI Learning Architect and Industry Mentor for Tech Skyline IT Solutions. 
+  Design a complete, job-ready workforce transformation learning pathway for the role of "${role}" within the "${domain}" domain.
+  
+  CORE OBJECTIVES:
+  - Deliver a journey from Beginner to Advanced levels.
+  - Emphasize real-time practice, live cloud labs, and production-grade scenarios.
+  - Align with industry certifications and enterprise use cases.
+  
+  The response must be a JSON object matching this schema:
+  {
+    "domain": "string",
+    "role": "string",
+    "overview": "string (Executive summary of the career path)",
+    "steps": [
+      {
+        "title": "string",
+        "level": "Beginner | Intermediate | Advanced",
+        "description": "string",
+        "tools": ["string"],
+        "labIdea": "string (Concrete project or live lab scenario)",
+        "assessmentStrategy": "string (How to measure competence)",
+        "skillOutcomes": ["string"],
+        "certifications": ["string"]
+      }
+    ],
+    "enterpriseUseCases": ["string"],
+    "careerAlignment": "string (Summary of market demand and roles)"
+  }
+  
+  Ensure the tools and labs are specific to the domain provided (e.g., if SAP, mention IBP/S4HANA; if Agentic AI, mention LangGraph/Bedrock).`;
 
   const response = await ai.models.generateContent({
     model: "gemini-3-pro-preview",
@@ -36,14 +62,17 @@ export const generateRoadmap = async (domain: TechDomain, role: string): Promise
                 description: { type: Type.STRING },
                 tools: { type: Type.ARRAY, items: { type: Type.STRING } },
                 labIdea: { type: Type.STRING },
+                assessmentStrategy: { type: Type.STRING },
+                skillOutcomes: { type: Type.ARRAY, items: { type: Type.STRING } },
                 certifications: { type: Type.ARRAY, items: { type: Type.STRING } }
               },
-              required: ["title", "level", "description", "tools", "labIdea", "certifications"]
+              required: ["title", "level", "description", "tools", "labIdea", "assessmentStrategy", "skillOutcomes", "certifications"]
             }
           },
-          enterpriseUseCases: { type: Type.ARRAY, items: { type: Type.STRING } }
+          enterpriseUseCases: { type: Type.ARRAY, items: { type: Type.STRING } },
+          careerAlignment: { type: Type.STRING }
         },
-        required: ["domain", "role", "overview", "steps", "enterpriseUseCases"]
+        required: ["domain", "role", "overview", "steps", "enterpriseUseCases", "careerAlignment"]
       }
     }
   });
