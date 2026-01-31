@@ -24,10 +24,11 @@ const categories: ResourceCategory[] = [
     title: "Official Murex Enterprise",
     icon: "fa-building-shield",
     color: "blue",
-    description: "Authenticated enterprise gateways for official Murex University certifications and live learning.",
+    description: "Authenticated enterprise gateways for official Murex University certifications, live learning, and VPN access.",
     resources: [
       { name: "Murex Academy", url: "https://training.murex.com/", type: "Portal", isOfficial: true, murexArea: "L1-L3 Learning", authRequired: "Customer/Partner Login" },
       { name: "MX.3 Live Learning", url: "https://livelearning.murex.com/", type: "Portal", isOfficial: true, murexArea: "Virtual Classroom", authRequired: "Contract Entitlement" },
+      { name: "Murex VPN Gateway", url: "https://www.murex.com/", type: "Portal", isOfficial: true, murexArea: "Enterprise Connectivity", authRequired: "VPN Credentials" },
       { name: "Murex Client Portal", url: "https://client.murex.com/", type: "Portal", isOfficial: true, murexArea: "Tech Docs", authRequired: "Company SSO" },
       { name: "Murex Official Home", url: "https://www.murex.com/", type: "Docs", isOfficial: true, murexArea: "Corporate Site", authRequired: "Public Access" }
     ]
@@ -84,7 +85,7 @@ const FreeResources: React.FC = () => {
           <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
           <input 
             type="text" 
-            placeholder="Search Academy, Live Learning, EdTech..." 
+            placeholder="Search Academy, Live Learning, VPN..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border border-slate-200 focus:ring-2 focus:ring-blue-500 shadow-sm outline-none text-sm font-bold"

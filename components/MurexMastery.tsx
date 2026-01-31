@@ -22,45 +22,52 @@ const MurexMastery: React.FC = () => {
     setSubmitted(true);
   };
 
-  const enterprisePortals = [
-    { 
-      name: "Murex Academy", 
-      url: "https://training.murex.com", 
-      desc: "Central platform for official L1-L3 certifications.", 
-      icon: "fa-graduation-cap", 
-      auth: "Customer/Partner Login",
-      tags: ["Credentialed", "Certifications"]
+  const technicalPillars = [
+    {
+      title: "1. Installation & Setup",
+      icon: "fa-server",
+      color: "blue",
+      desc: "Architectural deployment of MX.3 core binary files and services.",
+      items: [
+        "Deployment: Native SaaS, On-Prem (Bank DC), or Public Cloud (AWS/Azure).",
+        "Isolation: Separate Dev, Testing (UAT), and Production environment sets.",
+        "Tiering: 3-tier setup (App Server, Grid Nodes, DB Persistence).",
+        "License Management: Node-locked or Cloud-based subscription licensing."
+      ]
     },
-    { 
-      name: "MX.3 Live Learning", 
-      url: "https://livelearning.murex.com", 
-      desc: "Interactive virtual classrooms and expert-led labs.", 
-      icon: "fa-chalkboard-user", 
-      auth: "Contract Entitlement",
-      tags: ["Instructor-Led", "Live Labs"]
+    {
+      title: "2. Connectivity to Market Data",
+      icon: "fa-network-wired",
+      color: "emerald",
+      desc: "Real-time ingestion pipeline for high-frequency pricing and risk.",
+      items: [
+        "MDCS Layer: Dedicated Market Data Control System for real-time feeds.",
+        "Ingestion: Continuous streaming from Bloomberg, Refinitiv, or Exchange APIs.",
+        "Processing: Data ingested both on-prem and in cloud for unified pricing.",
+        "Automation: Instant curve bootstrapping based on incoming market ticks."
+      ]
     },
-    { 
-      name: "Murex Client Portal", 
-      url: "https://client.murex.com", 
-      desc: "Technical documentation and official support nexus.", 
-      icon: "fa-database", 
-      auth: "Authenticated Users",
-      tags: ["Docs", "PES Support"]
-    },
-    { 
-      name: "Murex Official Site", 
-      url: "https://www.murex.com", 
-      desc: "Enterprise HQ for product roadmaps and industry news.", 
-      icon: "fa-building-columns", 
-      auth: "Public Access",
-      tags: ["Corporate", "Roadmap"]
+    {
+      title: "3. Execution & Trading Flow",
+      icon: "fa-bolt-lightning",
+      color: "amber",
+      desc: "End-to-end lifecycle orchestration from capture to settlement.",
+      items: [
+        "Trade Capture: Real-time deal capture from UI, FIX bridge, or FpML API.",
+        "Instant Recalc: Pricing models and analytics re-evaluate on every trade/tick.",
+        "Risk Monitoring: Continuous limit checks and intraday Greeks updates.",
+        "Back-Office: Straight-through processing (STP) to settlement & SWIFT."
+      ]
     }
   ];
 
-  const industrialHighlights = [
-    { title: "FX Ecosystem", desc: "Real-time Spot, Forward, and Swap capture and settlement flows.", icon: "fa-money-bill-transfer", color: "blue" },
-    { title: "Derivatives Grid", desc: "Complex IRS/OIS pricing kernels and sensitivity (Greeks) calculations.", icon: "fa-chart-area", color: "indigo" },
-    { title: "Risk Engine", desc: "Intraday Monte Carlo VaR and portfolio revaluation at high scale.", icon: "fa-shield-halved", color: "emerald" }
+  const saasEssentials = [
+    { icon: "fa-microchip", label: "Core Platform Engine (MX.3 Architecture)" },
+    { icon: "fa-chart-area", label: "Front-office Trading & Risk Modules" },
+    { icon: "fa-receipt", label: "Back-office & Settlement Functions" },
+    { icon: "fa-database", label: "Data Feeds & Real-time Analytics Integration" },
+    { icon: "fa-network-wired", label: "Connectivity to Market Infrastructure" },
+    { icon: "fa-headset", label: "Support & Maintenance Services" }
   ];
 
   return (
@@ -68,20 +75,20 @@ const MurexMastery: React.FC = () => {
       {/* Hero Header */}
       <section className="bg-skyline-gradient rounded-[3.5rem] p-12 text-white relative overflow-hidden shadow-2xl">
         <div className="relative z-10 max-w-3xl">
-          <span className="bg-blue-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-400/30 mb-6 inline-block">Industrial Authorization</span>
-          <h1 className="text-6xl font-black mb-6 leading-tight">Murex (MX.3) <br/><span className="text-blue-400">Live Architecture Lab.</span></h1>
-          <p className="text-xl text-slate-300 mb-10 leading-relaxed">
-            Master the "One Brain, Many Organs" architecture. Explore the complete Front-to-Back-to-Risk lifecycle with our high-fidelity enterprise command center.
+          <span className="bg-blue-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-400/30 mb-6 inline-block">Enterprise Sandbox Access</span>
+          <h1 className="text-6xl font-black mb-6 leading-tight">Murex (MX.3) <br/><span className="text-blue-400">Deep Technical Mastery.</span></h1>
+          <p className="text-xl text-slate-300 mb-10 leading-relaxed font-medium">
+            Deploy, integrate, and master the world's leading capital markets engine. A production-ready environment for technical consultants and financial engineers.
           </p>
           <div className="flex gap-4">
             <button 
               onClick={() => { setShowSimulator(true); }}
               className="bg-white text-slate-900 font-black py-4 px-10 rounded-2xl text-xs uppercase tracking-widest flex items-center gap-3 hover:bg-blue-600 hover:text-white transition-all shadow-xl shadow-white/10"
             >
-              Enter Live Command Center <i className="fas fa-terminal"></i>
+              Initialize Command Center <i className="fas fa-terminal"></i>
             </button>
             <Link to="/murex-assessment" className="bg-blue-500 text-white font-black py-4 px-10 rounded-2xl text-xs uppercase tracking-widest flex items-center gap-3 hover:bg-blue-400 transition-all shadow-xl shadow-blue-600/20">
-              Take Professional Exam <i className="fas fa-file-signature"></i>
+              Technical Assessment <i className="fas fa-file-signature"></i>
             </Link>
           </div>
         </div>
@@ -94,14 +101,14 @@ const MurexMastery: React.FC = () => {
           <section className="animate-in slide-in-from-bottom-12 duration-1000">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Industrial Command Center</h2>
+                <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">SaaS Production Sandbox</h2>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Authorized Session: MX_ENTERPRISE_LIVE</p>
+                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Authorized Session: PRD_CLOUD_LIVE</p>
                 </div>
               </div>
               <button onClick={() => setShowSimulator(false)} className="text-slate-400 hover:text-slate-900 font-black text-xs uppercase tracking-widest flex items-center gap-2 transition-colors">
-                Terminate Session <i className="fas fa-times"></i>
+                Terminate Link <i className="fas fa-times"></i>
               </button>
             </div>
             <MX3Simulator />
@@ -109,60 +116,78 @@ const MurexMastery: React.FC = () => {
         )}
       </div>
 
-      {/* Key Modules Highlights */}
-      {!showSimulator && (
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {industrialHighlights.map((item, i) => (
-            <div key={i} className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-2xl transition-all group">
-              <div className={`w-14 h-14 rounded-2xl bg-${item.color}-50 text-${item.color}-600 flex items-center justify-center text-2xl group-hover:bg-${item.color}-600 group-hover:text-white transition-all mb-8 shadow-inner`}>
-                <i className={`fas ${item.icon}`}></i>
-              </div>
-              <h3 className="text-xl font-black text-slate-900 mb-3 uppercase tracking-tight">{item.title}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed font-medium mb-8">"{item.desc}"</p>
-              <button onClick={() => setShowSimulator(true)} className={`text-[10px] font-black text-${item.color}-600 uppercase tracking-[0.2em] flex items-center gap-2 group-hover:translate-x-1 transition-transform`}>
-                Explore Desk <i className="fas fa-arrow-right"></i>
-              </button>
-            </div>
-          ))}
-        </section>
-      )}
-
-      {/* Enterprise Nexus Grid */}
-      <section className="space-y-10">
-        <div className="flex items-center gap-4 border-b border-slate-200 pb-6">
-          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-xl text-blue-600 shadow-sm border border-slate-100">
-            <i className="fas fa-building-shield"></i>
+      {/* Deep Technical Pillars */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-4 border-b border-slate-200 pb-8">
+          <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-2xl text-blue-400 shadow-xl border border-slate-800">
+            <i className="fas fa-gears"></i>
           </div>
           <div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Murex Enterprise Nexus</h2>
-            <p className="text-sm font-medium text-slate-500 uppercase tracking-widest">Official Credentialed Training & Product Access</p>
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Murex Technical Ecosystem</h2>
+            <p className="text-sm font-medium text-slate-500 uppercase tracking-widest">Core Industrial Working Model</p>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {enterprisePortals.map((portal, i) => (
-            <a 
-              key={i} 
-              href={portal.url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:border-blue-500 transition-all group flex flex-col h-full"
-            >
-              <div className="w-14 h-14 rounded-2xl bg-slate-50 text-slate-900 flex items-center justify-center text-2xl group-hover:bg-blue-600 group-hover:text-white transition-all mb-6">
-                <i className={`fas ${portal.icon}`}></i>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {technicalPillars.map((pillar, i) => (
+            <div key={i} className="bg-white rounded-[3rem] p-10 border border-slate-100 shadow-sm hover:shadow-2xl transition-all group border-b-4 border-b-transparent hover:border-b-blue-600">
+              <div className={`w-16 h-16 rounded-2xl bg-${pillar.color}-50 text-${pillar.color}-600 flex items-center justify-center text-3xl mb-8 shadow-inner group-hover:scale-110 transition-transform`}>
+                <i className={`fas ${pillar.icon}`}></i>
               </div>
-              <h3 className="text-xl font-black mb-3 text-slate-900 group-hover:text-blue-600 transition-colors tracking-tight">{portal.name}</h3>
-              <p className="text-slate-500 text-xs leading-relaxed flex-1 font-medium italic mb-6">"{portal.desc}"</p>
-              <div className="space-y-4 pt-4 border-t border-slate-50">
-                <div className="flex items-center gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                  <i className="fas fa-lock text-[10px] text-amber-500"></i>
-                  <span className="text-[9px] font-black text-amber-700 uppercase">{portal.auth}</span>
-                </div>
-                <div className="text-[10px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-2">
-                  Access Portal <i className="fas fa-arrow-up-right-from-square"></i>
-                </div>
-              </div>
-            </a>
+              <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tight uppercase">{pillar.title}</h3>
+              <p className="text-slate-500 text-sm mb-8 font-medium italic">"{pillar.desc}"</p>
+              <ul className="space-y-4">
+                {pillar.items.map((item, idx) => (
+                  <li key={idx} className="flex gap-4 items-start group/li">
+                    <div className="mt-1.5 w-2 h-2 rounded-full bg-blue-600/20 group-hover/li:bg-blue-600 transition-colors shrink-0"></div>
+                    <p className="text-sm font-bold text-slate-700 leading-relaxed">{item}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
+        </div>
+      </section>
+
+      {/* SaaS & Cloud Hosting Section */}
+      <section className="bg-slate-950 rounded-[3.5rem] p-16 text-white relative overflow-hidden border border-white/5 shadow-2xl">
+        <div className="absolute top-0 right-0 p-16 opacity-5 pointer-events-none">
+          <i className="fas fa-cloud-bolt text-[20rem]"></i>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
+          <div className="space-y-8">
+            <span className="bg-blue-600/20 text-blue-400 border border-blue-500/30 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] inline-block">Cloud Environments</span>
+            <h2 className="text-5xl font-black leading-tight tracking-tight uppercase">Murex SaaS & <br/><span className="text-blue-500">Cloud Hosting.</span></h2>
+            <p className="text-lg text-slate-400 leading-relaxed font-medium italic">
+              Experience the unified core engine where real-time Front-Office pricing integrates seamlessly with Back-Office settlements and Cloud-native risk analytics.
+            </p>
+            <div className="grid grid-cols-2 gap-6 pt-4">
+              <div className="bg-white/5 p-6 rounded-3xl border border-white/10">
+                <i className="fas fa-shield-halved text-blue-500 mb-4 text-2xl"></i>
+                <h4 className="text-sm font-black uppercase mb-2">Secure SaaS</h4>
+                <p className="text-xs text-slate-500 font-medium">Managed instances for Treasury and Risk Analytics.</p>
+              </div>
+              <div className="bg-white/5 p-6 rounded-3xl border border-white/10">
+                <i className="fas fa-building-columns text-emerald-500 mb-4 text-2xl"></i>
+                <h4 className="text-sm font-black uppercase mb-2">Global Access</h4>
+                <p className="text-xs text-slate-500 font-medium">Direct connectivity to CCPs and Market Infra.</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white/5 rounded-[3rem] p-10 border border-white/10 flex flex-col justify-center space-y-8">
+            <h4 className="text-xl font-black uppercase tracking-tight text-blue-400">Platform Environment Essentials</h4>
+            <div className="space-y-4">
+              {saasEssentials.map((item, idx) => (
+                <div key={idx} className="flex items-center gap-4 bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-blue-500/50 transition-all cursor-default group">
+                  <div className="w-10 h-10 rounded-xl bg-blue-600/10 text-blue-500 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <i className={`fas ${item.icon} text-sm`}></i>
+                  </div>
+                  <span className="text-sm font-black text-slate-300 uppercase tracking-widest">{item.label}</span>
+                  <i className="fas fa-check text-emerald-500 ml-auto opacity-50"></i>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
