@@ -139,7 +139,7 @@ const MurexMastery: React.FC = () => {
           <span className="bg-blue-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-400/30 mb-6 inline-block">Murex Mastery Authorization</span>
           <h1 className="text-6xl font-black mb-6 leading-tight">Murex (MX.3) <br/><span className="text-blue-400">Complete Full Access.</span></h1>
           <p className="text-xl text-slate-300 max-w-2xl leading-relaxed">
-            Industrial-grade conceptual functional simulator designed for Front-to-Back mastery. Access granted to all 7 core pillars, algorithm prep, and SQL performance tuning.
+            Industrial-grade conceptual functional simulator designed for Front-to-Back mastery. Access granted to all 7 core pillars, career tracks, and tech mastery suite.
           </p>
           <div className="flex gap-4 mt-8">
             <button 
@@ -376,14 +376,17 @@ const MurexMastery: React.FC = () => {
             <div className="relative space-y-6">
               <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-blue-500/20"></div>
               {[
-                { step: "FO", label: "Analyst Practice", desc: "Learn trade capture and revaluation concept." },
-                { step: "MO", label: "Risk Practice", desc: "Analyze DV01 and portfolio sensitivities." },
-                { step: "BO", label: "Ops Practice", desc: "Master settlement rules and SWIFT triggers." }
+                { step: "FO", label: "Analyst Practice", desc: "Learn trade capture and revaluation concept.", modId: 2 },
+                { step: "MO", label: "Risk Practice", desc: "Analyze DV01 and portfolio sensitivities.", modId: 3 },
+                { step: "BO", label: "Ops Practice", desc: "Master settlement rules and SWIFT triggers.", modId: 4 }
               ].map((item, i) => (
-                <div key={i} className="flex gap-6 items-start relative">
-                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-[10px] font-black z-10 shrink-0">{item.step}</div>
+                <div key={i} className="flex gap-6 items-start relative group cursor-pointer" onClick={() => handleLaunchPractice(item.modId)}>
+                  <div className="w-8 h-8 rounded-full bg-blue-600 group-hover:bg-emerald-500 transition-colors flex items-center justify-center text-[10px] font-black z-10 shrink-0">{item.step}</div>
                   <div>
-                    <h4 className="text-sm font-black mb-1">{item.label}</h4>
+                    <div className="flex items-center gap-2">
+                       <h4 className="text-sm font-black mb-1 group-hover:text-blue-400 transition-colors">{item.label}</h4>
+                       <span className="text-[8px] font-black bg-emerald-500 text-white px-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity uppercase">Practice Now</span>
+                    </div>
                     <p className="text-xs text-slate-400">{item.desc}</p>
                   </div>
                 </div>
