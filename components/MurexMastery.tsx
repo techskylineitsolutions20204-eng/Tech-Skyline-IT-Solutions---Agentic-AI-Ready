@@ -122,82 +122,104 @@ const MurexMastery: React.FC = () => {
     }
   ];
 
+  const handleLaunchPractice = (moduleId: number) => {
+    setActiveModule(moduleId);
+    setShowSimulator(true);
+    // Smooth scroll to simulator
+    setTimeout(() => {
+      document.getElementById('simulator-anchor')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-16 pb-24 animate-in fade-in duration-700">
       {/* Hero Header */}
       <section className="bg-skyline-gradient rounded-[3rem] p-12 text-white relative overflow-hidden shadow-2xl">
         <div className="relative z-10">
-          <span className="bg-blue-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-400/30 mb-6 inline-block">Murex Workforce Transformation</span>
-          <h1 className="text-6xl font-black mb-6 leading-tight">Master Murex (MX.3) <br/><span className="text-blue-400">Safely & Expertly.</span></h1>
+          <span className="bg-blue-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-400/30 mb-6 inline-block">Murex Mastery Authorization</span>
+          <h1 className="text-6xl font-black mb-6 leading-tight">Murex (MX.3) <br/><span className="text-blue-400">Complete Full Access.</span></h1>
           <p className="text-xl text-slate-300 max-w-2xl leading-relaxed">
-            Avoid the risks of unofficial software. We provide an industrial-grade, conceptual functional simulator designed to teach MX.3 architecture, SQL extraction, and Trade Lifecycle mastery in a secure environment.
+            Industrial-grade conceptual functional simulator designed for Front-to-Back mastery. Access granted to all 7 core pillars, algorithm prep, and SQL performance tuning.
           </p>
           <div className="flex gap-4 mt-8">
             <button 
-              onClick={() => setShowSimulator(true)}
+              onClick={() => { setActiveModule(null); setShowSimulator(true); }}
               className="bg-white text-slate-900 font-black py-4 px-10 rounded-2xl text-xs uppercase tracking-widest flex items-center gap-3 hover:bg-blue-600 hover:text-white transition-all shadow-xl shadow-white/10"
             >
-              Launch Practice Simulator <i className="fas fa-terminal"></i>
+              Enterprise Sandbox <i className="fas fa-terminal"></i>
             </button>
             <Link to="/murex-assessment" className="bg-blue-500 text-white font-black py-4 px-10 rounded-2xl text-xs uppercase tracking-widest flex items-center gap-3 hover:bg-blue-400 transition-all shadow-xl shadow-blue-600/20">
-              Mock Technical Test <i className="fas fa-file-signature"></i>
+              Technical Assessment <i className="fas fa-file-signature"></i>
             </Link>
           </div>
         </div>
         <i className="fas fa-building-columns absolute -bottom-10 -right-10 text-[20rem] opacity-5"></i>
       </section>
 
-      {/* Interactive Simulator Section */}
-      {showSimulator && (
-        <section className="animate-in slide-in-from-bottom-12 duration-1000">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">High-Fidelity Workforce Sandbox</h2>
-              <p className="text-slate-500 text-sm font-medium">Practice Front-to-Back MX.3 Operations & SQL commands.</p>
+      {/* Simulator Section */}
+      <div id="simulator-anchor">
+        {showSimulator && (
+          <section className="animate-in slide-in-from-bottom-12 duration-1000">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">High-Fidelity Workforce Sandbox</h2>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Authorized: Full System Concept Access Enabled</p>
+                </div>
+              </div>
+              <button onClick={() => setShowSimulator(false)} className="text-slate-400 hover:text-slate-900 font-black text-xs uppercase tracking-widest flex items-center gap-2 transition-colors">
+                Terminate Session <i className="fas fa-times"></i>
+              </button>
             </div>
-            <button onClick={() => setShowSimulator(false)} className="text-slate-400 hover:text-slate-900 font-black text-xs uppercase tracking-widest flex items-center gap-2 transition-colors">
-              Close Sandbox <i className="fas fa-times"></i>
-            </button>
-          </div>
-          <MX3Simulator />
-        </section>
-      )}
+            <MX3Simulator initialModule={activeModule || undefined} />
+          </section>
+        )}
+      </div>
 
-      {/* Career Readiness Section */}
+      {/* Career Readiness / Tech Mastery Access */}
       <section className="bg-white rounded-[3.5rem] p-12 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center gap-12">
         <div className="flex-1 space-y-6">
           <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-inner">
-            <i className="fas fa-user-check"></i>
+            <i className="fas fa-unlock-keyhole"></i>
           </div>
-          <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Are you job-ready?</h2>
+          <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Tech Mastery Authorized</h2>
           <p className="text-slate-500 font-medium leading-relaxed">
-            Murex recruiters look for more than just screen familiarity. Our 60-minute Online Assessment simulates real industry screenings, focusing on OOP, Data Structures, Algorithms, and SQL performance tuning.
+            Directly practice complex logic required for MX.3 consulting roles. Master dynamic programming for pricing, query optimization for trade extraction, and OOP patterns for robust financial kernels.
           </p>
-          <Link to="/murex-assessment" className="inline-flex items-center gap-3 text-blue-600 font-black uppercase tracking-widest text-xs hover:gap-4 transition-all">
-            Take the Readiness Assessment <i className="fas fa-arrow-right"></i>
-          </Link>
+          <div className="flex gap-4">
+            <button 
+              onClick={() => { setActiveModule(6); setShowSimulator(true); }}
+              className="inline-flex items-center gap-3 text-blue-600 font-black uppercase tracking-widest text-xs hover:gap-4 transition-all"
+            >
+              Start Tech Practice <i className="fas fa-arrow-right"></i>
+            </button>
+          </div>
         </div>
         <div className="flex-1 grid grid-cols-2 gap-4">
-          <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-            <h4 className="text-[10px] font-black text-blue-600 uppercase mb-2">Algorithm Prep</h4>
-            <p className="text-xs text-slate-400 font-bold">Dynamic programming & Greedy approaches.</p>
-          </div>
-          <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-            <h4 className="text-[10px] font-black text-blue-600 uppercase mb-2">SQL Mastery</h4>
-            <p className="text-xs text-slate-400 font-bold">Query optimization for massive MX data sets.</p>
-          </div>
-          <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-            <h4 className="text-[10px] font-black text-blue-600 uppercase mb-2">OOP Design</h4>
-            <p className="text-xs text-slate-400 font-bold">Design patterns for scalable financial models.</p>
-          </div>
-          <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-            <h4 className="text-[10px] font-black text-blue-600 uppercase mb-2">AI Grading</h4>
-            <p className="text-xs text-slate-400 font-bold">Instant feedback from our Industry Mentor AI.</p>
-          </div>
+          {[
+            { title: "Algorithm Prep", desc: "DP & Greedy logic.", id: 6 },
+            { title: "SQL Mastery", desc: "MX data optimization.", id: 6 },
+            { title: "OOP Design", desc: "Scalable patterns.", id: 2 },
+            { title: "AI Grading", desc: "Mentor AI Feedback.", id: 0 }
+          ].map((item, i) => (
+            <div 
+              key={i} 
+              onClick={() => handleLaunchPractice(item.id)}
+              className="bg-slate-50 p-6 rounded-3xl border border-slate-100 cursor-pointer hover:border-blue-500 transition-all group"
+            >
+              <h4 className="text-[10px] font-black text-blue-600 uppercase mb-2 group-hover:text-blue-500">{item.title}</h4>
+              <p className="text-xs text-slate-400 font-bold">{item.desc}</p>
+              <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                <span className="text-[8px] font-black text-blue-600 uppercase">Launch</span>
+                <i className="fas fa-play text-[6px] text-blue-600"></i>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Course Content / Curriculum */}
+      {/* Curriculum Breakdown */}
       <section className="space-y-12">
         <div className="flex items-center gap-4 border-b border-slate-200 pb-6">
           <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-xl text-indigo-600 shadow-sm border border-indigo-100">
@@ -210,7 +232,7 @@ const MurexMastery: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Module Selection */}
+          {/* Module Selectors */}
           <div className="lg:col-span-4 space-y-3">
             {curriculumModules.map((mod) => (
               <button
@@ -233,14 +255,11 @@ const MurexMastery: React.FC = () => {
                     <h4 className={`text-sm font-black transition-colors ${activeModule === mod.id ? 'text-indigo-900' : 'text-slate-700'}`}>{mod.title}</h4>
                   </div>
                 </div>
-                <div className={`absolute top-0 right-0 p-4 opacity-0 transition-opacity ${activeModule === mod.id ? 'opacity-100' : ''}`}>
-                  <i className="fas fa-chevron-right text-indigo-300 text-xs"></i>
-                </div>
               </button>
             ))}
           </div>
 
-          {/* Module Detail Display */}
+          {/* Module Details Display */}
           <div className="lg:col-span-8">
             {activeModule ? (
               <div className="bg-white rounded-[3rem] p-12 border border-slate-100 shadow-sm min-h-[500px] animate-in slide-in-from-right-8 duration-500">
@@ -267,18 +286,18 @@ const MurexMastery: React.FC = () => {
                       ))}
                     </div>
 
-                    <div className="pt-8 flex gap-4">
+                    <div className="pt-8 flex flex-col sm:flex-row gap-4">
                       <button 
-                        onClick={() => setShowSimulator(true)}
-                        className="flex-1 bg-indigo-600 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all"
+                        onClick={() => handleLaunchPractice(mod.id)}
+                        className="flex-1 bg-indigo-600 text-white font-black py-5 rounded-2xl text-[10px] uppercase tracking-widest shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all flex items-center justify-center gap-3"
                       >
-                        Practice Module Concept
+                        <i className="fas fa-play"></i> Launch Practice Session
                       </button>
                       <Link 
                         to="/murex-assessment"
-                        className="flex-1 bg-white border-2 border-slate-100 text-slate-900 font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest hover:border-indigo-600 hover:text-indigo-600 text-center transition-all"
+                        className="flex-1 bg-white border-2 border-slate-100 text-slate-900 font-black py-5 rounded-2xl text-[10px] uppercase tracking-widest hover:border-indigo-600 hover:text-indigo-600 text-center transition-all flex items-center justify-center gap-3"
                       >
-                        Take Module Quiz
+                        <i className="fas fa-file-signature"></i> Take Module Quiz
                       </Link>
                     </div>
                   </div>
@@ -289,10 +308,8 @@ const MurexMastery: React.FC = () => {
                 <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6 text-3xl">
                   <i className="fas fa-layer-group text-slate-200"></i>
                 </div>
-                <h3 className="text-xl font-black text-slate-600 mb-2 uppercase tracking-tight">Select a Module</h3>
-                <p className="max-w-xs text-sm font-medium leading-relaxed">
-                  Click on a training module to the left to explore the professional functional and technical stream content.
-                </p>
+                <h3 className="text-xl font-black text-slate-600 mb-2 uppercase tracking-tight">Industrial Selection</h3>
+                <p className="max-w-xs text-sm font-medium leading-relaxed">Choose a curriculum module to view detailed topics and launch relevant authorized practice sessions.</p>
               </div>
             )}
           </div>
@@ -305,7 +322,7 @@ const MurexMastery: React.FC = () => {
           <div className="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-xl text-rose-600 shadow-sm border border-rose-100">
             <i className="fab fa-youtube"></i>
           </div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Murex Technical Video Training</h2>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Technical Video Training</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {trainingVideos.map((video, idx) => (
@@ -318,11 +335,10 @@ const MurexMastery: React.FC = () => {
             >
               <div className="aspect-video bg-slate-100 rounded-2xl mb-4 overflow-hidden relative flex items-center justify-center">
                 <i className="fab fa-youtube text-4xl text-slate-300 group-hover:text-rose-600 transition-colors"></i>
-                <div className="absolute inset-0 bg-rose-600/0 group-hover:bg-rose-600/5 transition-all"></div>
               </div>
               <h3 className="text-sm font-black text-slate-800 leading-tight flex-1 group-hover:text-rose-600 transition-colors">{video.title}</h3>
               <div className="mt-4 flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-                <span>Free Course</span>
+                <span>Free Course Access</span>
                 <i className="fas fa-arrow-right-long -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all"></i>
               </div>
             </a>
@@ -330,19 +346,19 @@ const MurexMastery: React.FC = () => {
         </div>
       </section>
 
-      {/* 1. Trade Lifecycle Section */}
+      {/* Industrial Framework Visualization */}
       <section className="space-y-8">
         <div className="flex items-center gap-4 border-b border-slate-200 pb-6">
           <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-xl text-blue-600 shadow-sm border border-slate-100">
             <i className="fas fa-arrows-spin"></i>
           </div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Industrial Practice Framework</h2>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Industrial Practice Framework</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-            <h3 className="text-lg font-black mb-4 uppercase tracking-tight text-blue-600">The Modern Learning Path</h3>
+            <h3 className="text-lg font-black mb-4 uppercase tracking-tight text-blue-600">Conceptual Learning Path</h3>
             <p className="text-slate-500 text-sm mb-6 leading-relaxed font-medium">
-              Top global banks prioritize conceptual understanding of revaluation, Greeks, and settlement. Our simulator mirrors these core workflows, preparing you for real Murex projects.
+              Real Murex projects prioritize architectural flow over screen-familiarity. Our simulator mirrors these core industrial workflows, preparing you for high-stakes enterprise projects.
             </p>
             <div className="space-y-3">
               <a href="https://corporatefinanceinstitute.com/resources/derivatives/trade-life-cycle/" target="_blank" className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 border border-slate-100 transition-all group">
@@ -350,7 +366,7 @@ const MurexMastery: React.FC = () => {
                 <i className="fas fa-chevron-right text-slate-300 group-hover:text-blue-500 transition-colors"></i>
               </a>
               <a href="https://www.wallstreetmojo.com/front-office-middle-office-back-office/" target="_blank" className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 border border-slate-100 transition-all group">
-                <span className="text-xs font-black text-slate-700 uppercase">FO/MO/BO Specializations</span>
+                <span className="text-xs font-black text-slate-700 uppercase">FO/MO/BO Logic Flows</span>
                 <i className="fas fa-chevron-right text-slate-300 group-hover:text-blue-500 transition-colors"></i>
               </a>
             </div>
@@ -360,9 +376,9 @@ const MurexMastery: React.FC = () => {
             <div className="relative space-y-6">
               <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-blue-500/20"></div>
               {[
-                { step: "FO", label: "Analyst Practice", desc: "Scenario: High-volatility market trade capture." },
-                { step: "MO", label: "Risk Practice", desc: "Scenario: Explaining VaR breaks to senior stakeholders." },
-                { step: "BO", label: "Ops Practice", desc: "Scenario: Investigating settlement failures in SWIFT." }
+                { step: "FO", label: "Analyst Practice", desc: "Learn trade capture and revaluation concept." },
+                { step: "MO", label: "Risk Practice", desc: "Analyze DV01 and portfolio sensitivities." },
+                { step: "BO", label: "Ops Practice", desc: "Master settlement rules and SWIFT triggers." }
               ].map((item, i) => (
                 <div key={i} className="flex gap-6 items-start relative">
                   <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-[10px] font-black z-10 shrink-0">{item.step}</div>
@@ -377,12 +393,12 @@ const MurexMastery: React.FC = () => {
         </div>
       </section>
 
-      {/* ENROLLMENT FORM (College Students) */}
+      {/* ENROLLMENT FORM */}
       <section id="enrollment" className="bg-slate-900 rounded-[3.5rem] p-12 text-white shadow-2xl relative overflow-hidden border border-white/5">
         <div className="relative z-10 max-w-4xl mx-auto">
           <div className="text-center mb-12 space-y-4">
-            <h2 className="text-4xl font-black tracking-tight">Certified Training Enrollment</h2>
-            <p className="text-slate-400 text-lg font-medium">Join our structured Murex career program. Built for students & professionals.</p>
+            <h2 className="text-4xl font-black tracking-tight uppercase">Murex Workforce Enrollment</h2>
+            <p className="text-slate-400 text-lg font-medium">Join the next cohort of certified Murex specialists. Built for students & professionals.</p>
           </div>
 
           {!submitted ? (
@@ -427,9 +443,9 @@ const MurexMastery: React.FC = () => {
                   value={formData.year}
                   onChange={(e) => setFormData({...formData, year: e.target.value})}
                 >
-                  <option className="bg-slate-900">Standard (5h/week)</option>
-                  <option className="bg-slate-900">Intensive (15h/week)</option>
-                  <option className="bg-slate-900">Project Focused</option>
+                  <option className="bg-slate-900">Standard Pathway</option>
+                  <option className="bg-slate-900">Intensive Bootcamp</option>
+                  <option className="bg-slate-900">Enterprise Training</option>
                 </select>
               </div>
               <div className="md:col-span-2 space-y-2">
@@ -449,7 +465,7 @@ const MurexMastery: React.FC = () => {
                 type="submit" 
                 className="md:col-span-2 bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl shadow-xl transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-3 group"
               >
-                Start Practice Journey <i className="fas fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
+                Confirm Enrollment <i className="fas fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
               </button>
             </form>
           ) : (
@@ -458,8 +474,8 @@ const MurexMastery: React.FC = () => {
                 <i className="fas fa-check"></i>
               </div>
               <div className="space-y-4">
-                <h3 className="text-3xl font-black">Ready for Launch</h3>
-                <p className="text-slate-400 max-w-md mx-auto font-medium">Your request has been prepared. Please send the generated email to <span className="text-blue-400">techskylineitsolutions20204@gmail.com</span> to receive your practice roadmap.</p>
+                <h3 className="text-3xl font-black">Authorized Success</h3>
+                <p className="text-slate-400 max-w-md mx-auto font-medium">Your request for certified training has been prepared. Please send the generated email to <span className="text-blue-400">techskylineitsolutions20204@gmail.com</span> to receive your practice keys.</p>
               </div>
               <button onClick={() => setSubmitted(false)} className="px-8 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Submit Another Request</button>
             </div>
