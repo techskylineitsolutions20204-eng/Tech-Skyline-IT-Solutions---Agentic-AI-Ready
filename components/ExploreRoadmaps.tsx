@@ -365,6 +365,33 @@ const ExploreRoadmaps: React.FC = () => {
                     </div>
                   ))}
                 </div>
+
+                {/* Related Domains Section */}
+                <div className="mt-16 pt-12 border-t border-slate-100">
+                  <h3 className="text-2xl font-black text-slate-900 mb-8 uppercase tracking-tight flex items-center gap-3">
+                    <i className="fas fa-share-nodes text-blue-600"></i>
+                    Complementary Specializations
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {DOMAIN_INFO[roadmap!.domain].related.map((relDomain) => (
+                      <div 
+                        key={relDomain}
+                        onClick={() => setSelectedDomain(relDomain)}
+                        className="p-6 bg-slate-50 rounded-3xl border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                            {DOMAIN_INFO[relDomain].icon}
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-black text-slate-900">{relDomain}</h4>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Explore Path →</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           )}
