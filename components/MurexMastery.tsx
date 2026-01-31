@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import MX3Simulator from './MX3Simulator';
 
 const MurexMastery: React.FC = () => {
@@ -13,6 +14,7 @@ const MurexMastery: React.FC = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [showSimulator, setShowSimulator] = useState(false);
+  const [activeModule, setActiveModule] = useState<number | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,26 +35,113 @@ const MurexMastery: React.FC = () => {
     { title: "EOD Batch Processing (Part 45)", url: "https://www.youtube.com/watch?v=DwZcYwURKS8&list=PLwTD3wzcIspYD78Se3CZAp6_CgbRm-pYg&index=45" }
   ];
 
+  const curriculumModules = [
+    {
+      id: 1,
+      title: "Introduction to Murex",
+      icon: "fa-earth-americas",
+      color: "blue",
+      topics: [
+        "Overview of Murex Platform and Architecture",
+        "Role of Murex in Capital Markets",
+        "Key Modules: Front Office, Risk, Back Office",
+        "Product Types and Asset Classes Supported"
+      ]
+    },
+    {
+      id: 2,
+      title: "Murex Front Office (FO)",
+      icon: "fa-landmark",
+      color: "indigo",
+      topics: [
+        "Trade Capture & Deal Input",
+        "Instrument Configuration (IR, FX, EQ, Credit)",
+        "Market Data Management (Curves, Volatility, Spreads)",
+        "Pricing Engines and Simulation"
+      ]
+    },
+    {
+      id: 3,
+      title: "Risk Management in Murex",
+      icon: "fa-chart-area",
+      color: "rose",
+      topics: [
+        "Market Risk and Credit Risk Setup",
+        "Value-at-Risk (VaR), Greeks & Sensitivity Analysis",
+        "P&L Analysis and Stress Testing",
+        "Risk Reports and Audit Controls"
+      ]
+    },
+    {
+      id: 4,
+      title: "Murex Back Office Operations (BO)",
+      icon: "fa-receipt",
+      color: "emerald",
+      topics: [
+        "Trade Lifecycle Management",
+        "Settlements, Confirmations & Payments",
+        "Static Data: Counterparties, Calendars, Legal Entities",
+        "Accounting, General Ledger, and Reporting"
+      ]
+    },
+    {
+      id: 5,
+      title: "Collateral & Treasury Management",
+      icon: "fa-sack-dollar",
+      color: "amber",
+      topics: [
+        "Collateral Optimization and Margining",
+        "Liquidity Management",
+        "Repo, Securities Lending & Borrowing",
+        "Cash Flow Projections"
+      ]
+    },
+    {
+      id: 6,
+      title: "Murex Technical Track",
+      icon: "fa-laptop-code",
+      color: "purple",
+      topics: [
+        "MxML Exchange (Workflows, Templates, Parsing Rules)",
+        "Datamart Configuration and Report Building",
+        "Integration (SWIFT, Calypso, Reuters, Bloomberg)",
+        "Database Schema & Data Extraction (Oracle/SQL)",
+        "Batch Scheduling and Job Monitoring"
+      ]
+    },
+    {
+      id: 7,
+      title: "Regulatory & Compliance Features",
+      icon: "fa-clipboard-check",
+      color: "slate",
+      topics: [
+        "EMIR, MiFID II, Dodd-Frank Reporting Capabilities",
+        "Regulatory Data Mapping and Submission Workflows",
+        "Audit Trails, Logging, and Access Control"
+      ]
+    }
+  ];
+
   return (
     <div className="max-w-7xl mx-auto space-y-16 pb-24 animate-in fade-in duration-700">
       {/* Hero Header */}
       <section className="bg-skyline-gradient rounded-[3rem] p-12 text-white relative overflow-hidden shadow-2xl">
         <div className="relative z-10">
-          <span className="bg-blue-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-400/30 mb-6 inline-block">Murex Technical Column</span>
-          <h1 className="text-6xl font-black mb-6 leading-tight">Master Murex (MX.3) <br/><span className="text-blue-400">From Your Browser.</span></h1>
+          <span className="bg-blue-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-400/30 mb-6 inline-block">Murex Workforce Transformation</span>
+          <h1 className="text-6xl font-black mb-6 leading-tight">Master Murex (MX.3) <br/><span className="text-blue-400">Safely & Expertly.</span></h1>
           <p className="text-xl text-slate-300 max-w-2xl leading-relaxed">
-            Murex consultants are trained on internal systems. We provide a 100% conceptual functional clone for students to master Trade Lifecycle, Risk, and Operations.
+            Avoid the risks of unofficial software. We provide an industrial-grade, conceptual functional simulator designed to teach MX.3 architecture, SQL extraction, and Trade Lifecycle mastery in a secure environment.
           </p>
           <div className="flex gap-4 mt-8">
             <button 
               onClick={() => setShowSimulator(true)}
               className="bg-white text-slate-900 font-black py-4 px-10 rounded-2xl text-xs uppercase tracking-widest flex items-center gap-3 hover:bg-blue-600 hover:text-white transition-all shadow-xl shadow-white/10"
             >
-              Launch MX.3 Simulator <i className="fas fa-terminal"></i>
+              Launch Practice Simulator <i className="fas fa-terminal"></i>
             </button>
-            <a href="https://www.youtube.com/@murexgroup" target="_blank" className="bg-rose-600 text-white font-black py-4 px-10 rounded-2xl text-xs uppercase tracking-widest flex items-center gap-3 hover:bg-rose-700 transition-all shadow-xl shadow-rose-600/20">
-              Architecture Demos <i className="fab fa-youtube"></i>
-            </a>
+            <Link to="/murex-assessment" className="bg-blue-500 text-white font-black py-4 px-10 rounded-2xl text-xs uppercase tracking-widest flex items-center gap-3 hover:bg-blue-400 transition-all shadow-xl shadow-blue-600/20">
+              Mock Technical Test <i className="fas fa-file-signature"></i>
+            </Link>
           </div>
         </div>
         <i className="fas fa-building-columns absolute -bottom-10 -right-10 text-[20rem] opacity-5"></i>
@@ -62,14 +151,153 @@ const MurexMastery: React.FC = () => {
       {showSimulator && (
         <section className="animate-in slide-in-from-bottom-12 duration-1000">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Functional Sandbox (V-MX3)</h2>
+            <div>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">High-Fidelity Workforce Sandbox</h2>
+              <p className="text-slate-500 text-sm font-medium">Practice Front-to-Back MX.3 Operations & SQL commands.</p>
+            </div>
             <button onClick={() => setShowSimulator(false)} className="text-slate-400 hover:text-slate-900 font-black text-xs uppercase tracking-widest flex items-center gap-2 transition-colors">
-              Close Simulator <i className="fas fa-times"></i>
+              Close Sandbox <i className="fas fa-times"></i>
             </button>
           </div>
           <MX3Simulator />
         </section>
       )}
+
+      {/* Career Readiness Section */}
+      <section className="bg-white rounded-[3.5rem] p-12 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center gap-12">
+        <div className="flex-1 space-y-6">
+          <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+            <i className="fas fa-user-check"></i>
+          </div>
+          <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">Are you job-ready?</h2>
+          <p className="text-slate-500 font-medium leading-relaxed">
+            Murex recruiters look for more than just screen familiarity. Our 60-minute Online Assessment simulates real industry screenings, focusing on OOP, Data Structures, Algorithms, and SQL performance tuning.
+          </p>
+          <Link to="/murex-assessment" className="inline-flex items-center gap-3 text-blue-600 font-black uppercase tracking-widest text-xs hover:gap-4 transition-all">
+            Take the Readiness Assessment <i className="fas fa-arrow-right"></i>
+          </Link>
+        </div>
+        <div className="flex-1 grid grid-cols-2 gap-4">
+          <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+            <h4 className="text-[10px] font-black text-blue-600 uppercase mb-2">Algorithm Prep</h4>
+            <p className="text-xs text-slate-400 font-bold">Dynamic programming & Greedy approaches.</p>
+          </div>
+          <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+            <h4 className="text-[10px] font-black text-blue-600 uppercase mb-2">SQL Mastery</h4>
+            <p className="text-xs text-slate-400 font-bold">Query optimization for massive MX data sets.</p>
+          </div>
+          <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+            <h4 className="text-[10px] font-black text-blue-600 uppercase mb-2">OOP Design</h4>
+            <p className="text-xs text-slate-400 font-bold">Design patterns for scalable financial models.</p>
+          </div>
+          <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+            <h4 className="text-[10px] font-black text-blue-600 uppercase mb-2">AI Grading</h4>
+            <p className="text-xs text-slate-400 font-bold">Instant feedback from our Industry Mentor AI.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Course Content / Curriculum */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-4 border-b border-slate-200 pb-6">
+          <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-xl text-indigo-600 shadow-sm border border-indigo-100">
+            <i className="fas fa-graduation-cap"></i>
+          </div>
+          <div>
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Murex Training Curriculum</h2>
+            <p className="text-sm font-medium text-slate-500 uppercase tracking-widest">7 Modules covering Functional & Technical Streams</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Module Selection */}
+          <div className="lg:col-span-4 space-y-3">
+            {curriculumModules.map((mod) => (
+              <button
+                key={mod.id}
+                onClick={() => setActiveModule(mod.id === activeModule ? null : mod.id)}
+                className={`w-full text-left p-6 rounded-3xl border-2 transition-all group relative overflow-hidden ${
+                  activeModule === mod.id 
+                    ? 'border-indigo-600 bg-indigo-50 shadow-xl shadow-indigo-500/10' 
+                    : 'border-slate-100 bg-white hover:border-indigo-200'
+                }`}
+              >
+                <div className="flex items-center gap-4 relative z-10">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm transition-all ${
+                    activeModule === mod.id ? 'bg-indigo-600 text-white' : 'bg-slate-50 text-slate-400 group-hover:bg-indigo-100 group-hover:text-indigo-600'
+                  }`}>
+                    <i className={`fas ${mod.icon}`}></i>
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Module {mod.id}</span>
+                    <h4 className={`text-sm font-black transition-colors ${activeModule === mod.id ? 'text-indigo-900' : 'text-slate-700'}`}>{mod.title}</h4>
+                  </div>
+                </div>
+                <div className={`absolute top-0 right-0 p-4 opacity-0 transition-opacity ${activeModule === mod.id ? 'opacity-100' : ''}`}>
+                  <i className="fas fa-chevron-right text-indigo-300 text-xs"></i>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Module Detail Display */}
+          <div className="lg:col-span-8">
+            {activeModule ? (
+              <div className="bg-white rounded-[3rem] p-12 border border-slate-100 shadow-sm min-h-[500px] animate-in slide-in-from-right-8 duration-500">
+                {curriculumModules.filter(m => m.id === activeModule).map(mod => (
+                  <div key={mod.id} className="space-y-8">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-2">
+                        <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">In-Depth Syllabus</span>
+                        <h3 className="text-4xl font-black text-slate-900 tracking-tight">{mod.title}</h3>
+                      </div>
+                      <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center text-4xl text-slate-200">
+                        <i className={`fas ${mod.icon}`}></i>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4">
+                      {mod.topics.map((topic, i) => (
+                        <div key={i} className="flex items-center gap-5 p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:border-indigo-100 transition-colors group">
+                          <div className="w-8 h-8 rounded-lg bg-white border border-slate-100 flex items-center justify-center text-[10px] font-black text-indigo-600 shadow-sm group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                            {i + 1}
+                          </div>
+                          <p className="text-sm font-bold text-slate-700 leading-relaxed">{topic}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="pt-8 flex gap-4">
+                      <button 
+                        onClick={() => setShowSimulator(true)}
+                        className="flex-1 bg-indigo-600 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all"
+                      >
+                        Practice Module Concept
+                      </button>
+                      <Link 
+                        to="/murex-assessment"
+                        className="flex-1 bg-white border-2 border-slate-100 text-slate-900 font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest hover:border-indigo-600 hover:text-indigo-600 text-center transition-all"
+                      >
+                        Take Module Quiz
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-white border-2 border-dashed border-slate-200 rounded-[3rem] p-12 flex flex-col items-center justify-center text-center text-slate-400 h-full min-h-[500px]">
+                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6 text-3xl">
+                  <i className="fas fa-layer-group text-slate-200"></i>
+                </div>
+                <h3 className="text-xl font-black text-slate-600 mb-2 uppercase tracking-tight">Select a Module</h3>
+                <p className="max-w-xs text-sm font-medium leading-relaxed">
+                  Click on a training module to the left to explore the professional functional and technical stream content.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
 
       {/* Video Training Library */}
       <section className="space-y-8">
@@ -108,33 +336,33 @@ const MurexMastery: React.FC = () => {
           <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-xl text-blue-600 shadow-sm border border-slate-100">
             <i className="fas fa-arrows-spin"></i>
           </div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Trade Lifecycle & Operations</h2>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Industrial Practice Framework</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-            <h3 className="text-lg font-black mb-4 uppercase tracking-tight text-blue-600">Lifecycle Masterclass</h3>
+            <h3 className="text-lg font-black mb-4 uppercase tracking-tight text-blue-600">The Modern Learning Path</h3>
             <p className="text-slate-500 text-sm mb-6 leading-relaxed font-medium">
-              Understand how a trade flows from a Trader's terminal to the General Ledger. This is the most critical conceptual hurdle for any Murex role.
+              Top global banks prioritize conceptual understanding of revaluation, Greeks, and settlement. Our simulator mirrors these core workflows, preparing you for real Murex projects.
             </p>
             <div className="space-y-3">
               <a href="https://corporatefinanceinstitute.com/resources/derivatives/trade-life-cycle/" target="_blank" className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 border border-slate-100 transition-all group">
-                <span className="text-xs font-black text-slate-700 uppercase">CFI Lifecycle Guide</span>
+                <span className="text-xs font-black text-slate-700 uppercase">Mastering Trade Lifecycle</span>
                 <i className="fas fa-chevron-right text-slate-300 group-hover:text-blue-500 transition-colors"></i>
               </a>
               <a href="https://www.wallstreetmojo.com/front-office-middle-office-back-office/" target="_blank" className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 border border-slate-100 transition-all group">
-                <span className="text-xs font-black text-slate-700 uppercase">FO/MO/BO Explained</span>
+                <span className="text-xs font-black text-slate-700 uppercase">FO/MO/BO Specializations</span>
                 <i className="fas fa-chevron-right text-slate-300 group-hover:text-blue-500 transition-colors"></i>
               </a>
             </div>
           </div>
           <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white">
-            <h3 className="text-lg font-black mb-6 uppercase tracking-tight text-blue-400">Conceptual Flow (MX Equivalent)</h3>
+            <h3 className="text-lg font-black mb-6 uppercase tracking-tight text-blue-400">Interactive Career Tracks</h3>
             <div className="relative space-y-6">
               <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-blue-500/20"></div>
               {[
-                { step: "FO", label: "Trade Capture & Validation", desc: "Pricing IRS/FX with market curves." },
-                { step: "MO", label: "Risk, PnL & Revaluation", desc: "Greeks (DV01) and VaR computation." },
-                { step: "BO", label: "Settlement & Accounting", desc: "SWIFT messages and GL postings." }
+                { step: "FO", label: "Analyst Practice", desc: "Scenario: High-volatility market trade capture." },
+                { step: "MO", label: "Risk Practice", desc: "Scenario: Explaining VaR breaks to senior stakeholders." },
+                { step: "BO", label: "Ops Practice", desc: "Scenario: Investigating settlement failures in SWIFT." }
               ].map((item, i) => (
                 <div key={i} className="flex gap-6 items-start relative">
                   <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-[10px] font-black z-10 shrink-0">{item.step}</div>
@@ -149,143 +377,12 @@ const MurexMastery: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. Product Mastery */}
-      <section className="space-y-8">
-        <div className="flex items-center gap-4 border-b border-slate-200 pb-6">
-          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-xl text-emerald-600 shadow-sm border border-slate-100">
-            <i className="fas fa-box-open"></i>
-          </div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Products You MUST Learn</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col">
-            <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl mb-6">
-              <i className="fas fa-coins"></i>
-            </div>
-            <h3 className="text-lg font-black mb-2">FX Mastery</h3>
-            <p className="text-xs text-slate-500 font-medium mb-6 flex-1">Forwards, Swaps, Value Dates, and Forward Points. Murex's bread and butter.</p>
-            <a href="https://www.investopedia.com/terms/f/forwardexchangecontract.asp" target="_blank" className="text-[10px] font-black text-emerald-600 uppercase tracking-widest border-b border-emerald-100 pb-1 w-fit">Investopedia Ref →</a>
-          </div>
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col">
-            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-6">
-              <i className="fas fa-percent"></i>
-            </div>
-            <h3 className="text-lg font-black mb-2">Interest Rates</h3>
-            <p className="text-xs text-slate-500 font-medium mb-6 flex-1">Swaps, Yield Curves, and Discounting. Master OIS/LIBOR bootstrapping.</p>
-            <a href="https://www.investopedia.com/terms/i/interestrateswap.asp" target="_blank" className="text-[10px] font-black text-blue-600 uppercase tracking-widest border-b border-blue-100 pb-1 w-fit">Investopedia Ref →</a>
-          </div>
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col">
-            <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl mb-6">
-              <i className="fas fa-shield-virus"></i>
-            </div>
-            <h3 className="text-lg font-black mb-2">Credit (CDS)</h3>
-            <p className="text-xs text-slate-500 font-medium mb-6 flex-1">Credit Default Swaps: Premium legs vs Protection legs. High-value desk skill.</p>
-            <a href="https://www.investopedia.com/terms/c/creditdefaultswap.asp" target="_blank" className="text-[10px] font-black text-purple-600 uppercase tracking-widest border-b border-purple-100 pb-1 w-fit">Investopedia Ref →</a>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Risk & Analytics Table */}
-      <section className="space-y-8">
-        <div className="flex items-center gap-4 border-b border-slate-200 pb-6">
-          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-xl text-rose-600 shadow-sm border border-slate-100">
-            <i className="fas fa-chart-line"></i>
-          </div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Risk, PnL & Analytics</h2>
-        </div>
-        <div className="bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm">
-          <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Metric</th>
-                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Functional Meaning</th>
-                <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Learn More</th>
-              </tr>
-            </thead>
-            <tbody className="text-sm font-medium text-slate-700">
-              {[
-                { m: "NPV", d: "Net Present Value / MTM Revaluation", link: "https://www.investopedia.com/terms/n/npv.asp" },
-                { m: "DV01", d: "Interest Rate Sensitivity per 1bp shift", link: "https://www.investopedia.com/terms/v/var.asp" },
-                { m: "Greeks", d: "Delta, Gamma, Vega, Theta sensitivities", link: "https://www.investopedia.com/terms/g/greeks.asp" },
-                { m: "VaR", d: "Value at Risk (99% CI Historical/MC)", link: "https://www.investopedia.com/terms/v/var.asp" }
-              ].map((row, i) => (
-                <tr key={i} className="border-b border-slate-100 last:border-none">
-                  <td className="px-8 py-5 font-black text-slate-900">{row.m}</td>
-                  <td className="px-8 py-5 text-slate-500">{row.d}</td>
-                  <td className="px-8 py-5"><a href={row.link} target="_blank" className="text-blue-600 hover:underline">Investopedia Guide</a></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* 4. Practical Labs */}
-      <section className="space-y-8">
-        <div className="flex items-center gap-4 border-b border-slate-200 pb-6">
-          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-xl text-blue-600 shadow-sm border border-slate-100">
-            <i className="fas fa-vial"></i>
-          </div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Hands-On Practice Labs (FREE)</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white border border-white/5 flex flex-col h-full shadow-2xl">
-            <div className="flex items-center gap-3 mb-6">
-              <i className="fab fa-python text-blue-400 text-2xl"></i>
-              <h3 className="text-xl font-black uppercase tracking-tight">FX Forward Pricing Lab</h3>
-            </div>
-            <ul className="space-y-4 mb-10 flex-1">
-              <li className="flex gap-3 text-sm text-slate-400"><i className="fas fa-check-circle text-blue-500 mt-1"></i> Build Excel Trade Blotter</li>
-              <li className="flex gap-3 text-sm text-slate-400"><i className="fas fa-check-circle text-blue-500 mt-1"></i> Script Forward Pricing in Python</li>
-              <li className="flex gap-3 text-sm text-slate-400"><i className="fas fa-check-circle text-blue-500 mt-1"></i> Formula: Forward = Spot × (DF_base / DF_quote)</li>
-            </ul>
-            <div className="flex gap-3">
-              <a href="https://github.com/quantlib/QuantLib-SWIG" target="_blank" className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">QuantLib SWIG</a>
-              <a href="https://github.com/quantopian/research_public" target="_blank" className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Quantopian Repo</a>
-            </div>
-          </div>
-          <div className="bg-blue-600 rounded-[2.5rem] p-10 text-white flex flex-col h-full shadow-2xl shadow-blue-500/30">
-            <div className="flex items-center gap-3 mb-6">
-              <i className="fas fa-terminal text-white text-2xl"></i>
-              <h3 className="text-xl font-black uppercase tracking-tight">Yield Curve & IR Swap Lab</h3>
-            </div>
-            <ul className="space-y-4 mb-10 flex-1">
-              <li className="flex gap-3 text-sm text-blue-100"><i className="fas fa-check-circle text-white mt-1"></i> Curve Bootstrapping from SOFR/LIBOR</li>
-              <li className="flex gap-3 text-sm text-blue-100"><i className="fas fa-check-circle text-white mt-1"></i> Swap Revaluation Logic</li>
-              <li className="flex gap-3 text-sm text-blue-100"><i className="fas fa-check-circle text-white mt-1"></i> Calculate DV01 per Book</li>
-            </ul>
-            <a href="https://quantlib-python-docs.readthedocs.io/" target="_blank" className="px-6 py-3 bg-white text-blue-600 rounded-xl text-xs font-black uppercase tracking-widest text-center shadow-xl">QuantLib Python Docs</a>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. SQL & Unix */}
-      <section className="bg-slate-50 rounded-[3rem] p-12 border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="space-y-6">
-          <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight flex items-center gap-3">
-            <i className="fas fa-database text-blue-600"></i> SQL Mastery
-          </h3>
-          <p className="text-sm text-slate-500 font-medium leading-relaxed">Mandatory for Murex integration and reporting. Practice joins, aggregations, and trade aging queries.</p>
-          <div className="flex gap-3">
-            <a href="https://www.postgresqltutorial.com/" target="_blank" className="text-[10px] font-black text-blue-600 border-b-2 border-blue-200 pb-1 uppercase">PostgreSQL Guide</a>
-            <a href="https://sqlbolt.com/" target="_blank" className="text-[10px] font-black text-blue-600 border-b-2 border-blue-200 pb-1 uppercase">SQL Bolt</a>
-          </div>
-        </div>
-        <div className="space-y-6">
-          <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight flex items-center gap-3">
-            <i className="fas fa-terminal text-slate-900"></i> Unix / Linux
-          </h3>
-          <p className="text-sm text-slate-500 font-medium leading-relaxed">L1/L2 Support must master grep, awk, and sed for parsing MX.3 logs and managing batch sessions.</p>
-          <a href="https://linuxjourney.com/" target="_blank" className="text-[10px] font-black text-slate-900 border-b-2 border-slate-300 pb-1 uppercase inline-block">Linux Journey</a>
-        </div>
-      </section>
-
       {/* ENROLLMENT FORM (College Students) */}
       <section id="enrollment" className="bg-slate-900 rounded-[3.5rem] p-12 text-white shadow-2xl relative overflow-hidden border border-white/5">
         <div className="relative z-10 max-w-4xl mx-auto">
           <div className="text-center mb-12 space-y-4">
-            <h2 className="text-4xl font-black tracking-tight">College Student Enrollment</h2>
-            <p className="text-slate-400 text-lg font-medium">Apply for our Industry-Linked Agentic Murex Training Program.</p>
+            <h2 className="text-4xl font-black tracking-tight">Certified Training Enrollment</h2>
+            <p className="text-slate-400 text-lg font-medium">Join our structured Murex career program. Built for students & professionals.</p>
           </div>
 
           {!submitted ? (
@@ -295,7 +392,7 @@ const MurexMastery: React.FC = () => {
                 <input 
                   required
                   type="text" 
-                  placeholder="John Doe" 
+                  placeholder="Your Name" 
                   className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
@@ -306,66 +403,53 @@ const MurexMastery: React.FC = () => {
                 <input 
                   required
                   type="email" 
-                  placeholder="john@college.edu" 
+                  placeholder="your@email.com" 
                   className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-1">College Name</label>
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-1">College/Organization</label>
                 <input 
                   required
                   type="text" 
-                  placeholder="Global Institute of Finance" 
+                  placeholder="Institution Name" 
                   className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold"
                   value={formData.college}
                   onChange={(e) => setFormData({...formData, college: e.target.value})}
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-1">Current Year</label>
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-1">Practice Intensity</label>
                 <select 
                   className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold"
                   value={formData.year}
                   onChange={(e) => setFormData({...formData, year: e.target.value})}
                 >
-                  <option className="bg-slate-900">1st Year</option>
-                  <option className="bg-slate-900">2nd Year</option>
-                  <option className="bg-slate-900">3rd Year</option>
-                  <option className="bg-slate-900">Final Year</option>
-                  <option className="bg-slate-900">Post-Grad</option>
+                  <option className="bg-slate-900">Standard (5h/week)</option>
+                  <option className="bg-slate-900">Intensive (15h/week)</option>
+                  <option className="bg-slate-900">Project Focused</option>
                 </select>
               </div>
               <div className="md:col-span-2 space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-1">Preferred Specialization</label>
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-1">Target Murex Role</label>
                 <select 
                   className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold text-blue-400"
                   value={formData.specialization}
                   onChange={(e) => setFormData({...formData, specialization: e.target.value})}
                 >
-                  <option className="bg-slate-900">Front Office Analyst</option>
-                  <option className="bg-slate-900">Risk Analyst (MO)</option>
-                  <option className="bg-slate-900">Back Office / Operations</option>
-                  <option className="bg-slate-900">Business Analyst (BA)</option>
-                  <option className="bg-slate-900">Technical Consultant (Dev/SQL)</option>
+                  <option className="bg-slate-900">Front Office Specialist</option>
+                  <option className="bg-slate-900">Market Risk Analyst</option>
+                  <option className="bg-slate-900">Ops & Settlements Expert</option>
+                  <option className="bg-slate-900">Technical Murex Consultant</option>
                 </select>
-              </div>
-              <div className="md:col-span-2 space-y-2">
-                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-1">Why Murex? (Optional)</label>
-                <textarea 
-                  rows={3}
-                  placeholder="Share your interest in financial technology..." 
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium"
-                  value={formData.message}
-                  onChange={(e) => setFormData({...formData, message: e.target.value})}
-                ></textarea>
               </div>
               <button 
                 type="submit" 
                 className="md:col-span-2 bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl shadow-xl transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-3 group"
               >
-                Submit Application <i className="fas fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
+                Start Practice Journey <i className="fas fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
               </button>
             </form>
           ) : (
@@ -374,10 +458,10 @@ const MurexMastery: React.FC = () => {
                 <i className="fas fa-check"></i>
               </div>
               <div className="space-y-4">
-                <h3 className="text-3xl font-black">Application Received</h3>
-                <p className="text-slate-400 max-w-md mx-auto font-medium">We've received your enrollment details. Please send the generated email to <span className="text-blue-400">techskylineitsolutions20204@gmail.com</span> to finalize the process.</p>
+                <h3 className="text-3xl font-black">Ready for Launch</h3>
+                <p className="text-slate-400 max-w-md mx-auto font-medium">Your request has been prepared. Please send the generated email to <span className="text-blue-400">techskylineitsolutions20204@gmail.com</span> to receive your practice roadmap.</p>
               </div>
-              <button onClick={() => setSubmitted(false)} className="px-8 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Apply for another track</button>
+              <button onClick={() => setSubmitted(false)} className="px-8 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Submit Another Request</button>
             </div>
           )}
         </div>

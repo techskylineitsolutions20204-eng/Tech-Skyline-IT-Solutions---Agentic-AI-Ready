@@ -12,6 +12,7 @@ import AgenticTutorStack from './components/AgenticTutorStack';
 import OrchestrationHub from './components/OrchestrationHub';
 import MurexMastery from './components/MurexMastery';
 import MX3Simulator from './components/MX3Simulator';
+import MurexAssessment from './components/MurexAssessment';
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -23,6 +24,7 @@ const App: React.FC = () => {
     { path: '/automation-hub', label: 'Automation Hub', icon: 'fa-gears' },
     { path: '/tutor-stack', label: 'Tutor Blueprint', icon: 'fa-microchip' },
     { path: '/murex-mastery', label: 'Murex Mastery', icon: 'fa-building-columns' },
+    { path: '/murex-assessment', label: 'Online Assessment', icon: 'fa-file-signature' },
     { path: '/mx3-simulator', label: 'MX.3 Simulator', icon: 'fa-terminal' },
     { path: '/labs', label: 'Live Sandbox', icon: 'fa-flask-vial' },
     { path: '/resources', label: 'Resource Hub', icon: 'fa-book-open' },
@@ -99,6 +101,7 @@ const App: React.FC = () => {
             <Route path="/automation-hub" element={<OrchestrationHub />} />
             <Route path="/tutor-stack" element={<AgenticTutorStack />} />
             <Route path="/murex-mastery" element={<MurexMastery />} />
+            <Route path="/murex-assessment" element={<MurexAssessment />} />
             <Route path="/mx3-simulator" element={<MX3Simulator />} />
             <Route path="/labs" element={<LiveLabs />} />
             <Route path="/resources" element={<FreeResources />} />
